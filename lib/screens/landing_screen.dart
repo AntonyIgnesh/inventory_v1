@@ -2,12 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:inventory_v1/widgets/reusable_card.dart';
 import 'package:inventory_v1/constants.dart';
 import 'total_asset_screen.dart';
-import 'update_products_screen.dart';
 import 'add_products_screen.dart';
 import 'package:inventory_v1/widgets/icon_content.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-class LandingScreen extends StatelessWidget {
+class LandingScreen extends StatefulWidget {
+  @override
+  _LandingScreenState createState() => _LandingScreenState();
+}
+
+class _LandingScreenState extends State<LandingScreen> {
+  @override
+  void initState() {
+    super.initState();
+    Firebase.initializeApp().whenComplete(() => print('FireBase is UP'));
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
