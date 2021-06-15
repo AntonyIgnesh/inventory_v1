@@ -6,9 +6,10 @@ import 'package:inventory_v1/widgets/toast.dart';
 import 'package:inventory_v1/material_sizes_data.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
+import 'landing_screen.dart';
 
-final _fireStore = FirebaseFirestore.instance;
-List<DropdownMenuItem<String>> sizeListFromFireStore = [];
+// final _fireStore = FirebaseFirestore.instance;
+// List<DropdownMenuItem<String>> sizeListFromFireStore = [];
 
 class AddProductsScreen extends StatefulWidget {
   @override
@@ -21,64 +22,8 @@ class _AddProductsScreenState extends State<AddProductsScreen> {
   TextEditingController rateController = TextEditingController();
   TextEditingController sizeController = TextEditingController();
   int rate = 1;
-  String size;
+  String size = sizeListFromFireStore.first.value;
   bool showLoading = false;
-
-  Future getSizesFromFireBase() async {
-    try {
-      var sizeFromFireStore =
-          await _fireStore.collection("productSizes").doc("sizes").get();
-      if (sizeFromFireStore != null) {
-        for (String sizeForList in sizeFromFireStore.data().values) {
-          var newItem = DropdownMenuItem(
-            child: Text(
-              sizeForList,
-              style: kAddProductSizesStyle,
-            ),
-            value: sizeForList,
-          );
-          sizeListFromFireStore.add(newItem);
-        }
-        setState(() {
-          size = sizeListFromFireStore.first.value;
-        });
-      } else {
-        print('Nothing fetched');
-      }
-    } catch (e) {
-      print(e);
-      print('Error in Getting Sizes from Firebase');
-    }
-  }
-
-  // List<DropdownMenuItem> getSizeList() {
-  //   List<DropdownMenuItem<String>> sizeItems = [];
-  //   for (String sizes in sizeList) {
-  //     var newItem = DropdownMenuItem(
-  //       child: Text(
-  //         sizes,
-  //         style: kAddProductSizesStyle,
-  //       ),
-  //       value: sizes,
-  //     );
-  //     sizeItems.add(newItem);
-  //   }
-  //   return sizeItems;
-  // }
-
-  @override
-  void initState() {
-    super.initState();
-    setState(() => showLoading = true);
-    getSizesFromFireBase();
-    setState(() => showLoading = false);
-  }
-
-  @override
-  void deactivate() {
-    sizeListFromFireStore.clear();
-    super.deactivate();
-  }
 
   @override
   Widget build(BuildContext context) {
