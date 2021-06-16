@@ -8,6 +8,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
+import 'package:intl/intl.dart';
 
 final _fireStore = FirebaseFirestore.instance;
 List<DropdownMenuItem<String>> sizeListFromFireStore = [];
@@ -49,10 +50,76 @@ class _LandingScreenState extends State<LandingScreen> {
     }
   }
 
+  Future generateDocumentID() async {
+    List<DocumentSnapshot> documents;
+    List<String> productDocumentIdList = [];
+    int lastAddedProductDocumentId;
+    int newProductDocumentId;
+    String finalProductDocumentId;
+    var documentsFromFireStore = await _fireStore.collection("products").get();
+    documents = documentsFromFireStore.docs;
+    documents.forEach((data) {
+      productDocumentIdList.add(data.id);
+    });
+    productDocumentIdList.sort();
+    lastAddedProductDocumentId =
+        int.parse(productDocumentIdList.last.substring(7));
+    newProductDocumentId = lastAddedProductDocumentId + 1;
+
+    finalProductDocumentId =
+        'Product${newProductDocumentId.toString().padLeft(10, '0')}';
+    print(finalProductDocumentId);
+
+    // await _fireStore.collection('products').doc(finalProductDocumentId).set({
+    //   'ProductId': '21JUN-00103',
+    // });
+  }
+
   Future generateProductID() async {
-    var documentsFromFireStore =
-        await _fireStore.collection("products").get();
-    print(documentsFromFireStore.docs);
+    List<String> productIdFromFireStore = [];
+    DateTime dateUnformatted = DateTime.now();
+    DateFormat dateFormatted = DateFormat('dd MMM yy');
+    String fullDateNeeded = dateFormatted.format(dateUnformatted);
+
+    var splitDate = fullDateNeeded.split(' ');
+    String todayDate = splitDate[0];
+    String todayMonth = splitDate[1];
+    String todayYear = splitDate[2];
+
+    var documentsWithDateFilterFromFireStore = await _fireStore
+        .collection("products")
+        .where(
+          "ProductAddMonth",
+          isEqualTo: todayMonth,
+        )
+        .where(
+          'ProductAddYear',
+          isEqualTo: todayYear,
+        )
+        .get();
+    if (documentsWithDateFilterFromFireStore != null) {
+      List<DocumentSnapshot> dateFilteredList =
+          documentsWithDateFilterFromFireStore.docs;
+
+      if (dateFilteredList.isNotEmpty) {
+        dateFilteredList.forEach((receivedRecords) {
+          productIdFromFireStore.add(receivedRecords.get('ProductId'));
+        });
+      } else {
+        print('Nothing fetched');
+      }
+      productIdFromFireStore.sort();
+      String lastAddedProductId = productIdFromFireStore.last;
+      String lastAddedProductIdNumbersOnly = lastAddedProductId.substring(6);
+      int lastAddedProductIdNumbersOnlyInt =
+          int.parse(lastAddedProductIdNumbersOnly);
+      int newProductIdInt = lastAddedProductIdNumbersOnlyInt + 1;
+      String finalNewProductId = todayYear +
+          todayMonth.toUpperCase() +
+          '-' +
+          newProductIdInt.toString().padLeft(5, '0');
+      print(finalNewProductId);
+    }
   }
 
   @override
