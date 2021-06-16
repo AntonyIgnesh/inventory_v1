@@ -44,4 +44,40 @@ class ShowingToast {
       toastDuration: Duration(seconds: 2),
     );
   }
+
+  showFailureToast(String textToBeDisplayed) {
+    fToast = FToast();
+    fToast.init(context);
+    Widget toast = Container(
+      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(25.0),
+        color: Colors.redAccent,
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            Icons.do_not_disturb_alt,
+            color: Colors.red[900],
+          ),
+          SizedBox(
+            width: 12.0,
+          ),
+          Text(
+            textToBeDisplayed,
+            style: TextStyle(
+              color: Colors.red[900],
+            ),
+          ),
+        ],
+      ),
+    );
+
+    fToast.showToast(
+      child: toast,
+      gravity: ToastGravity.TOP,
+      toastDuration: Duration(seconds: 2),
+    );
+  }
 }

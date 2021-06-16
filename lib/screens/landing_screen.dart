@@ -12,6 +12,11 @@ import 'package:intl/intl.dart';
 
 final _fireStore = FirebaseFirestore.instance;
 List<DropdownMenuItem<String>> sizeListFromFireStore = [];
+String finalProductDocumentId;
+String finalNewProductId;
+String todayDate;
+String todayMonth;
+String todayYear;
 
 class LandingScreen extends StatefulWidget {
   @override
@@ -55,19 +60,28 @@ class _LandingScreenState extends State<LandingScreen> {
     List<String> productDocumentIdList = [];
     int lastAddedProductDocumentId;
     int newProductDocumentId;
-    String finalProductDocumentId;
-    var documentsFromFireStore = await _fireStore.collection("products").get();
-    documents = documentsFromFireStore.docs;
-    documents.forEach((data) {
-      productDocumentIdList.add(data.id);
-    });
-    productDocumentIdList.sort();
-    lastAddedProductDocumentId =
-        int.parse(productDocumentIdList.last.substring(7));
-    newProductDocumentId = lastAddedProductDocumentId + 1;
 
-    finalProductDocumentId =
-        'Product${newProductDocumentId.toString().padLeft(10, '0')}';
+    var documentsFromFireStore = await _fireStore.collection("products").get();
+
+    if (documentsFromFireStore != null) {
+      documents = documentsFromFireStore.docs;
+      if (documents.isNotEmpty) {
+        documents.forEach((data) {
+          productDocumentIdList.add(data.id);
+        });
+        productDocumentIdList.sort();
+        print(productDocumentIdList);
+        lastAddedProductDocumentId =
+            int.parse(productDocumentIdList.last.substring(7));
+        newProductDocumentId = lastAddedProductDocumentId + 1;
+
+        finalProductDocumentId =
+            'Product${newProductDocumentId.toString().padLeft(10, '0')}';
+      } else {
+        finalProductDocumentId = 'Product0000000001';
+      }
+    }
+
     print(finalProductDocumentId);
 
     // await _fireStore.collection('products').doc(finalProductDocumentId).set({
@@ -82,9 +96,9 @@ class _LandingScreenState extends State<LandingScreen> {
     String fullDateNeeded = dateFormatted.format(dateUnformatted);
 
     var splitDate = fullDateNeeded.split(' ');
-    String todayDate = splitDate[0];
-    String todayMonth = splitDate[1];
-    String todayYear = splitDate[2];
+    todayDate = splitDate[0];
+    todayMonth = splitDate[1];
+    todayYear = splitDate[2];
 
     var documentsWithDateFilterFromFireStore = await _fireStore
         .collection("products")
@@ -105,19 +119,20 @@ class _LandingScreenState extends State<LandingScreen> {
         dateFilteredList.forEach((receivedRecords) {
           productIdFromFireStore.add(receivedRecords.get('ProductId'));
         });
+
+        productIdFromFireStore.sort();
+        String lastAddedProductId = productIdFromFireStore.last;
+        String lastAddedProductIdNumbersOnly = lastAddedProductId.substring(6);
+        int lastAddedProductIdNumbersOnlyInt =
+            int.parse(lastAddedProductIdNumbersOnly);
+        int newProductIdInt = lastAddedProductIdNumbersOnlyInt + 1;
+        finalNewProductId = todayMonth.toUpperCase() +
+            todayYear +
+            '-' +
+            newProductIdInt.toString().padLeft(5, '0');
       } else {
-        print('Nothing fetched');
+        finalNewProductId = todayMonth.toUpperCase() + todayYear + '-00001';
       }
-      productIdFromFireStore.sort();
-      String lastAddedProductId = productIdFromFireStore.last;
-      String lastAddedProductIdNumbersOnly = lastAddedProductId.substring(6);
-      int lastAddedProductIdNumbersOnlyInt =
-          int.parse(lastAddedProductIdNumbersOnly);
-      int newProductIdInt = lastAddedProductIdNumbersOnlyInt + 1;
-      String finalNewProductId = todayYear +
-          todayMonth.toUpperCase() +
-          '-' +
-          newProductIdInt.toString().padLeft(5, '0');
       print(finalNewProductId);
     }
   }
@@ -161,8 +176,7 @@ class _LandingScreenState extends State<LandingScreen> {
                         children: [
                           Expanded(
                             child: GestureDetector(
-                              onTap: () async {
-                                await generateProductID();
+                              onTap: () {
                                 Navigator.pushNamed(
                                   context,
                                   '/updateProductsScreen',
@@ -208,6 +222,11 @@ class _LandingScreenState extends State<LandingScreen> {
                                   await getSizesFromFireBase();
                                   setState(() => showLoading = false);
                                 }
+
+                                setState(() => showLoading = true);
+                                await generateDocumentID();
+                                await generateProductID();
+                                setState(() => showLoading = false);
 
                                 showModalBottomSheet(
                                   backgroundColor:

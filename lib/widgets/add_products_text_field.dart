@@ -7,12 +7,14 @@ class AddProductsTextField extends StatelessWidget {
   final TextEditingController controller;
   final TextInputType textInputType;
   final int maxLines;
+  final bool editable;
   AddProductsTextField({
     this.lableTextForTextField,
     this.onChangeFunction,
     this.controller,
     this.textInputType,
     this.maxLines,
+    this.editable = true,
   });
 
   @override
@@ -24,6 +26,7 @@ class AddProductsTextField extends StatelessWidget {
         Radius.circular(20.0),
       ),
       child: TextField(
+        enabled: editable,
         maxLines: maxLines,
         onChanged: onChangeFunction,
         style: kAddProductTextFieldStyle,

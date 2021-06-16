@@ -27,11 +27,17 @@ class _AddProductsScreenState extends State<AddProductsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    productIdController.text = finalNewProductId;
     sizeController.text = size;
     rateController.text = rate.toString();
     rateController.selection = TextSelection.fromPosition(
       TextPosition(
         offset: rateController.text.length,
+      ),
+    );
+    productDescriptionController.selection = TextSelection.fromPosition(
+      TextPosition(
+        offset: productDescriptionController.text.length,
       ),
     );
     // height: MediaQuery.of(context).size.height * 0.75,
@@ -71,9 +77,11 @@ class _AddProductsScreenState extends State<AddProductsScreen> {
                           child: AddProductsTextField(
                             maxLines: 1,
                             lableTextForTextField: 'Product ID',
-                            onChangeFunction: (value) {
-                              productIdController.text = value;
-                            },
+                            controller: productIdController,
+                            editable: false,
+                            // onChangeFunction: (value) {
+                            //   productIdController.text = value;
+                            // },
                           ),
                         ),
                         SizedBox(
@@ -196,12 +204,39 @@ class _AddProductsScreenState extends State<AddProductsScreen> {
                                   FontAwesomeIcons.check,
                                   color: Colors.white,
                                 ),
-                                onPressed: () {
-                                  ShowingToast(context: context)
-                                      .showSuccessToast("Product " +
-                                          productIdController.text +
-                                          " added Successfully");
-                                  Navigator.pop(context);
+                                onPressed: () async {
+                                  if (productDescriptionController
+                                      .text.isNotEmpty) {
+                                    // setState(() => showLoading = true);
+                                    await FirebaseFirestore.instance
+                                        .collection('products')
+                                        .doc(finalProductDocumentId)
+                                        .set(
+                                      {
+                                        'ProductId': productIdController.text,
+                                        'ProductDescription':
+                                            productDescriptionController.text,
+                                        'Size': sizeController.text,
+                                        'Rate': rateController.text,
+                                        'ProductAddDate': todayDate,
+                                        'ProductAddMonth': todayMonth,
+                                        'ProductAddYear': todayYear,
+                                        'Timestamp': DateTime.now(),
+                                      },
+                                    );
+                                    // setState(() => showLoading = false);
+                                    ShowingToast(context: context)
+                                        .showSuccessToast("Product " +
+                                            productIdController.text +
+                                            " added Successfully");
+                                    Navigator.pop(context);
+                                  } else if (productDescriptionController
+                                      .text.isEmpty) {
+                                    ShowingToast(context: context)
+                                        .showFailureToast(
+                                      "Description can\'t be empty",
+                                    );
+                                  }
                                 },
                               ),
                             ),
