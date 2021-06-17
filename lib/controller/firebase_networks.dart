@@ -119,10 +119,7 @@ Future addProduct(BuildContext context, String productId, String productDesc,
   try {
     if (productDesc.isNotEmpty) {
       // setState(() => showLoading = true);
-      await FirebaseFirestore.instance
-          .collection('products')
-          .doc(finalProductDocumentId)
-          .set(
+      await _fireStore.collection('products').doc(finalProductDocumentId).set(
         {
           'ProductId': productId,
           'ProductDescription': productDesc,
