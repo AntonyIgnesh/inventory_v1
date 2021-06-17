@@ -6,17 +6,8 @@ import 'add_products_screen.dart';
 import 'package:inventory_v1/widgets/icon_content.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
-import 'package:intl/intl.dart';
-
-final _fireStore = FirebaseFirestore.instance;
-List<DropdownMenuItem<String>> sizeListFromFireStore = [];
-String finalProductDocumentId;
-String finalNewProductId;
-String todayDate;
-String todayMonth;
-String todayYear;
+import 'package:inventory_v1/controller/firebase_networks.dart';
 
 class LandingScreen extends StatefulWidget {
   @override
@@ -29,112 +20,6 @@ class _LandingScreenState extends State<LandingScreen> {
   void initState() {
     super.initState();
     Firebase.initializeApp().whenComplete(() => print('FireBase is UP'));
-  }
-
-  Future getSizesFromFireBase() async {
-    try {
-      var sizeFromFireStore =
-          await _fireStore.collection("productSizes").doc("sizes").get();
-      if (sizeFromFireStore != null) {
-        for (String sizeForList in sizeFromFireStore.data().values) {
-          var newItem = DropdownMenuItem(
-            child: Text(
-              sizeForList,
-              style: kAddProductSizesStyle,
-            ),
-            value: sizeForList,
-          );
-          sizeListFromFireStore.add(newItem);
-        }
-      } else {
-        print('Nothing fetched');
-      }
-    } catch (e) {
-      print(e);
-      print('Error in Getting Sizes from Firebase');
-    }
-  }
-
-  Future generateDocumentID() async {
-    List<DocumentSnapshot> documents;
-    List<String> productDocumentIdList = [];
-    int lastAddedProductDocumentId;
-    int newProductDocumentId;
-
-    var documentsFromFireStore = await _fireStore.collection("products").get();
-
-    if (documentsFromFireStore != null) {
-      documents = documentsFromFireStore.docs;
-      if (documents.isNotEmpty) {
-        documents.forEach((data) {
-          productDocumentIdList.add(data.id);
-        });
-        productDocumentIdList.sort();
-        print(productDocumentIdList);
-        lastAddedProductDocumentId =
-            int.parse(productDocumentIdList.last.substring(7));
-        newProductDocumentId = lastAddedProductDocumentId + 1;
-
-        finalProductDocumentId =
-            'Product${newProductDocumentId.toString().padLeft(10, '0')}';
-      } else {
-        finalProductDocumentId = 'Product0000000001';
-      }
-    }
-
-    print(finalProductDocumentId);
-
-    // await _fireStore.collection('products').doc(finalProductDocumentId).set({
-    //   'ProductId': '21JUN-00103',
-    // });
-  }
-
-  Future generateProductID() async {
-    List<String> productIdFromFireStore = [];
-    DateTime dateUnformatted = DateTime.now();
-    DateFormat dateFormatted = DateFormat('dd MMM yy');
-    String fullDateNeeded = dateFormatted.format(dateUnformatted);
-
-    var splitDate = fullDateNeeded.split(' ');
-    todayDate = splitDate[0];
-    todayMonth = splitDate[1];
-    todayYear = splitDate[2];
-
-    var documentsWithDateFilterFromFireStore = await _fireStore
-        .collection("products")
-        .where(
-          "ProductAddMonth",
-          isEqualTo: todayMonth,
-        )
-        .where(
-          'ProductAddYear',
-          isEqualTo: todayYear,
-        )
-        .get();
-    if (documentsWithDateFilterFromFireStore != null) {
-      List<DocumentSnapshot> dateFilteredList =
-          documentsWithDateFilterFromFireStore.docs;
-
-      if (dateFilteredList.isNotEmpty) {
-        dateFilteredList.forEach((receivedRecords) {
-          productIdFromFireStore.add(receivedRecords.get('ProductId'));
-        });
-
-        productIdFromFireStore.sort();
-        String lastAddedProductId = productIdFromFireStore.last;
-        String lastAddedProductIdNumbersOnly = lastAddedProductId.substring(6);
-        int lastAddedProductIdNumbersOnlyInt =
-            int.parse(lastAddedProductIdNumbersOnly);
-        int newProductIdInt = lastAddedProductIdNumbersOnlyInt + 1;
-        finalNewProductId = todayMonth.toUpperCase() +
-            todayYear +
-            '-' +
-            newProductIdInt.toString().padLeft(5, '0');
-      } else {
-        finalNewProductId = todayMonth.toUpperCase() + todayYear + '-00001';
-      }
-      print(finalNewProductId);
-    }
   }
 
   @override

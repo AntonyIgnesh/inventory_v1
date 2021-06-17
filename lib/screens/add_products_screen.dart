@@ -2,14 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:inventory_v1/constants.dart';
 import 'package:inventory_v1/widgets/add_products_text_field.dart';
-import 'package:inventory_v1/widgets/toast.dart';
-import 'package:inventory_v1/material_sizes_data.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
-import 'landing_screen.dart';
-
-// final _fireStore = FirebaseFirestore.instance;
-// List<DropdownMenuItem<String>> sizeListFromFireStore = [];
+import 'package:inventory_v1/controller/firebase_networks.dart';
 
 class AddProductsScreen extends StatefulWidget {
   @override
@@ -205,38 +199,13 @@ class _AddProductsScreenState extends State<AddProductsScreen> {
                                   color: Colors.white,
                                 ),
                                 onPressed: () async {
-                                  if (productDescriptionController
-                                      .text.isNotEmpty) {
-                                    // setState(() => showLoading = true);
-                                    await FirebaseFirestore.instance
-                                        .collection('products')
-                                        .doc(finalProductDocumentId)
-                                        .set(
-                                      {
-                                        'ProductId': productIdController.text,
-                                        'ProductDescription':
-                                            productDescriptionController.text,
-                                        'Size': sizeController.text,
-                                        'Rate': rateController.text,
-                                        'ProductAddDate': todayDate,
-                                        'ProductAddMonth': todayMonth,
-                                        'ProductAddYear': todayYear,
-                                        'Timestamp': DateTime.now(),
-                                      },
-                                    );
-                                    // setState(() => showLoading = false);
-                                    ShowingToast(context: context)
-                                        .showSuccessToast("Product " +
-                                            productIdController.text +
-                                            " added Successfully");
-                                    Navigator.pop(context);
-                                  } else if (productDescriptionController
-                                      .text.isEmpty) {
-                                    ShowingToast(context: context)
-                                        .showFailureToast(
-                                      "Description can\'t be empty",
-                                    );
-                                  }
+                                  await addProduct(
+                                    context,
+                                    productIdController.text,
+                                    productDescriptionController.text,
+                                    sizeController.text,
+                                    rateController.text,
+                                  );
                                 },
                               ),
                             ),
