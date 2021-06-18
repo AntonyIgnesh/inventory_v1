@@ -8,6 +8,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:inventory_v1/controller/firebase_networks.dart';
+import 'package:inventory_v1/widgets/sizes_dropdown.dart';
 
 class LandingScreen extends StatefulWidget {
   @override
@@ -78,7 +79,12 @@ class _LandingScreenState extends State<LandingScreen> {
                           ),
                           Expanded(
                             child: GestureDetector(
-                              onTap: () {
+                              onTap: () async {
+                                allProductsList = [];
+                                setState(() => showLoading = true);
+                                await getAllProductsDetails();
+                                await getSizesDropdown(kViewProductSizesStyle);
+                                setState(() => showLoading = false);
                                 Navigator.pushNamed(
                                   context,
                                   '/viewProductsScreen',
@@ -102,15 +108,10 @@ class _LandingScreenState extends State<LandingScreen> {
                           Expanded(
                             child: GestureDetector(
                               onTap: () async {
-                                if (sizeListFromFireStore.isEmpty) {
-                                  setState(() => showLoading = true);
-                                  await getSizesFromFireBase();
-                                  setState(() => showLoading = false);
-                                }
-
                                 setState(() => showLoading = true);
                                 await generateDocumentID();
                                 await generateProductID();
+                                await getSizesDropdown(kAddProductSizesStyle);
                                 setState(() => showLoading = false);
 
                                 showModalBottomSheet(

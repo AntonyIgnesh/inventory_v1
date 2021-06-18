@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:inventory_v1/constants.dart';
+import 'package:inventory_v1/widgets/products_card.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:inventory_v1/controller/firebase_networks.dart';
 
 class ViewProductsScreen extends StatelessWidget {
   @override
@@ -26,91 +28,40 @@ class ViewProductsScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Text('HI'),
-              InkWell(
-                borderRadius: BorderRadius.circular(20),
-                onTap: () {},
-                child: Card(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  color: kCardColor,
-                  shadowColor: Colors.white24,
-                  elevation: 8,
-                  child: Container(
-                    padding: EdgeInsets.symmetric(
-                      vertical: 10,
-                      horizontal: 10,
-                    ),
-                    child: Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'MMMyy-00000',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 25,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            Text(
-                              'ADDED ON : ',
-                            ),
-                          ],
-                        ),
-                        Text(
-                          'Description',
-                          style: TextStyle(
-                            fontSize: 15,
-                          ),
-                        ),
-                      ],
-                    ),
+              Expanded(
+                child: Container(
+                  child: ListView.builder(
+                    keyboardDismissBehavior:
+                        ScrollViewKeyboardDismissBehavior.onDrag,
+                    scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
+                    itemCount: allProductsList.length,
+                    itemBuilder: CardBuilder,
                   ),
                 ),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Expanded(
-                    child: TextField(
-                      style: TextStyle(
-                        color: Colors.black,
-                      ),
-                      decoration: InputDecoration(
-                        hintText: 'Search Product...',
-                        hintStyle: kAddProductTextFieldLableStyle,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(60.0),
-                          ),
+              Container(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        style: TextStyle(
+                          color: Colors.black,
                         ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(60.0),
-                          ),
-                          borderSide: BorderSide(
-                            color: Colors.white,
-                            width: 2.0,
-                          ),
-                        ),
-                        filled: true,
-                        fillColor: Color(0xFFE2E3E3),
-                        isDense: true,
-                        contentPadding: EdgeInsets.all(10),
+                        decoration:
+                            kViewProductsSearchProductTextFieldDecoration,
                       ),
                     ),
-                  ),
-                  IconButton(
-                    onPressed: () {},
-                    icon: Icon(
-                      Icons.filter_list,
-                      size: 35,
+                    IconButton(
+                      onPressed: () {},
+                      icon: Icon(
+                        Icons.filter_list,
+                        size: 35,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ],
           ),

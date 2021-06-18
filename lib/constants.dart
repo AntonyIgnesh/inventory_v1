@@ -60,3 +60,54 @@ const kAddProductSizesStyle = TextStyle(
   color: kCardColor,
   fontSize: 18.0,
 );
+
+const kViewProductSizesStyle = TextStyle(
+  color: Colors.white,
+  fontSize: 18.0,
+);
+
+const kViewProductsSearchProductTextFieldDecoration = InputDecoration(
+  hintText: 'Search Product...',
+  hintStyle: kAddProductTextFieldLableStyle,
+  border: OutlineInputBorder(
+    borderRadius: BorderRadius.all(
+      Radius.circular(60.0),
+    ),
+  ),
+  focusedBorder: OutlineInputBorder(
+    borderRadius: BorderRadius.all(
+      Radius.circular(60.0),
+    ),
+    borderSide: BorderSide(
+      color: Colors.white,
+      width: 2.0,
+    ),
+  ),
+  filled: true,
+  fillColor: Color(0xFFE2E3E3),
+  isDense: true,
+  contentPadding: EdgeInsets.all(10),
+);
+
+const kViewProductProductIdTextStyle = TextStyle(
+  color: Colors.white,
+  fontSize: 25,
+  fontWeight: FontWeight.bold,
+);
+
+const kViewProductDateTextStyle = TextStyle(
+  color: Colors.grey,
+  letterSpacing: 3,
+  fontSize: 12,
+);
+
+const kViewProductProductDescTextStyle = TextStyle(
+  fontSize: 15,
+  color: Colors.amberAccent,
+);
+
+const kViewProductSizeTextStyle = TextStyle(
+  color: Colors.orangeAccent,
+  fontSize: 15,
+  fontWeight: FontWeight.bold,
+);

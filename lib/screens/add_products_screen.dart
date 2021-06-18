@@ -4,6 +4,7 @@ import 'package:inventory_v1/constants.dart';
 import 'package:inventory_v1/widgets/add_products_text_field.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:inventory_v1/controller/firebase_networks.dart';
+import 'package:inventory_v1/widgets/sizes_dropdown.dart';
 
 class AddProductsScreen extends StatefulWidget {
   @override
@@ -115,12 +116,11 @@ class _AddProductsScreenState extends State<AddProductsScreen> {
                               SizedBox(
                                 width: 20.0,
                               ),
-                              DropdownButton<String>(
-                                iconEnabledColor: Colors.black,
-                                dropdownColor: kbottomSheetBackgroundColor,
-                                value: sizeController.text,
-                                items: sizeListFromFireStore,
-                                onChanged: (value) {
+                              SizesDropdown(
+                                iconColor: Colors.black,
+                                backgroundColor: kbottomSheetBackgroundColor,
+                                controller: sizeController,
+                                onPress: (value) {
                                   setState(() {
                                     size = value;
                                   });

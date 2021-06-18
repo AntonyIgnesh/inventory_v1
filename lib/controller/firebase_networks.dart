@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
-import 'package:inventory_v1/constants.dart';
 import 'package:inventory_v1/widgets/toast.dart';
 
 final _fireStore = FirebaseFirestore.instance;
@@ -11,25 +10,27 @@ String finalNewProductId;
 String todayDate;
 String todayMonth;
 String todayYear;
+List<Map<String, dynamic>> allProductsList = [];
+var sizeFromFireStore;
 
 Future getSizesFromFireBase() async {
   try {
-    var sizeFromFireStore =
+    sizeFromFireStore =
         await _fireStore.collection("productSizes").doc("sizes").get();
-    if (sizeFromFireStore != null) {
-      for (String sizeForList in sizeFromFireStore.data().values) {
-        var newItem = DropdownMenuItem(
-          child: Text(
-            sizeForList,
-            style: kAddProductSizesStyle,
-          ),
-          value: sizeForList,
-        );
-        sizeListFromFireStore.add(newItem);
-      }
-    } else {
-      print('Nothing fetched');
-    }
+    // if (sizeFromFireStore != null) {
+    //   for (String sizeForList in sizeFromFireStore.data().values) {
+    //     var newItem = DropdownMenuItem(
+    //       child: Text(
+    //         sizeForList,
+    //         style: kAddProductSizesStyle,
+    //       ),
+    //       value: sizeForList,
+    //     );
+    //     sizeListFromFireStore.add(newItem);
+    //   }
+    // } else {
+    //   print('Nothing fetched');
+    // }
   } catch (e) {
     print(e);
     print('Error in Getting Sizes from Firebase');
@@ -144,5 +145,29 @@ Future addProduct(BuildContext context, String productId, String productDesc,
     ShowingToast(context: context).showFailureToast(
       "Error occurred while adding product",
     );
+  }
+}
+
+Future getAllProductsDetails() async {
+  var documentWithAllProductDetails =
+      await _fireStore.collection('products').get();
+  List<DocumentSnapshot> allProductsListFromFireStore =
+      documentWithAllProductDetails.docs;
+  if (allProductsListFromFireStore.isNotEmpty) {
+    allProductsListFromFireStore.forEach((element) {
+      allProductsList.add({
+        'ProductId': element.get('ProductId'),
+        'ProductDescription': element.get('ProductDescription'),
+        'Size': element.get('Size'),
+        'Rate': element.get('Rate'),
+        'ProductAddDate': element.get('ProductAddDate'),
+        'ProductAddMonth': element.get('ProductAddMonth'),
+        'ProductAddYear': element.get('ProductAddYear'),
+        'Timestamp': element.get('Timestamp'),
+      });
+    });
+    // allProductsList.forEach((element) {
+    //   print(element);
+    // });
   }
 }
