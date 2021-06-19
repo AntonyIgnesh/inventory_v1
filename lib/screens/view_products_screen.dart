@@ -4,9 +4,22 @@ import 'package:inventory_v1/widgets/products_card.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:inventory_v1/controller/firebase_networks.dart';
 
-class ViewProductsScreen extends StatelessWidget {
+class ViewProductsScreen extends StatefulWidget {
+  @override
+  _ViewProductsScreenState createState() => _ViewProductsScreenState();
+}
+
+class _ViewProductsScreenState extends State<ViewProductsScreen> {
+  List<Map> searchList = List.from(allProductsList);
+  onSearchingProduct(String value) {
+    setState(() {
+      searchList = allProductsList.toList();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    print('Building View Products');
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -53,13 +66,13 @@ class ViewProductsScreen extends StatelessWidget {
                             kViewProductsSearchProductTextFieldDecoration,
                       ),
                     ),
-                    IconButton(
-                      onPressed: () {},
-                      icon: Icon(
-                        Icons.filter_list,
-                        size: 35,
-                      ),
-                    ),
+                    // IconButton(
+                    //   onPressed: () {},
+                    //   icon: Icon(
+                    //     Icons.filter_list,
+                    //     size: 35,
+                    //   ),
+                    // ),
                   ],
                 ),
               ),

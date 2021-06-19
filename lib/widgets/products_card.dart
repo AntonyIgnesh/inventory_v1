@@ -15,7 +15,7 @@ Widget CardBuilder(BuildContext context, int index) {
   );
 }
 
-class ProductsCard extends StatelessWidget {
+class ProductsCard extends StatefulWidget {
   final String productId;
   final String productDesc;
   final String productAddDate;
@@ -34,27 +34,35 @@ class ProductsCard extends StatelessWidget {
     this.rate,
   });
 
+  @override
+  _ProductsCardState createState() => _ProductsCardState();
+}
+
+class _ProductsCardState extends State<ProductsCard> {
   bool showLoading = false;
+
+  onGoBack(dynamic value) {
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
+    print('Building card');
     return InkWell(
       borderRadius: BorderRadius.circular(20),
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => ProductDetailsScreen(
-              productId: productId,
-              productDesc: productDesc,
-              productAddDate: productAddDate,
-              productAddMonth: productAddMonth,
-              productAddYear: productAddYear,
-              size: size,
-              rate: rate,
-            ),
+        Route route = MaterialPageRoute(
+          builder: (context) => ProductDetailsScreen(
+            productId: widget.productId,
+            productDesc: widget.productDesc,
+            productAddDate: widget.productAddDate,
+            productAddMonth: widget.productAddMonth,
+            productAddYear: widget.productAddYear,
+            size: widget.size,
+            rate: widget.rate,
           ),
         );
+        Navigator.push(context, route).then(onGoBack);
       },
       child: Card(
         shape: RoundedRectangleBorder(
@@ -74,11 +82,11 @@ class ProductsCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    productId,
+                    widget.productId,
                     style: kViewProductProductIdTextStyle,
                   ),
                   Text(
-                    '$productAddDate $productAddMonth\'$productAddYear',
+                    '${widget.productAddDate} ${widget.productAddMonth}\'${widget.productAddYear}',
                     style: kViewProductDateTextStyle,
                   ),
                 ],
@@ -90,13 +98,13 @@ class ProductsCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    productDesc.length < 40
-                        ? productDesc
-                        : productDesc.substring(0, 37) + '...',
+                    widget.productDesc.length < 40
+                        ? widget.productDesc
+                        : widget.productDesc.substring(0, 37) + '...',
                     style: kViewProductProductDescTextStyle,
                   ),
                   Text(
-                    size,
+                    widget.size,
                     style: kViewProductSizeTextStyle,
                   ),
                 ],

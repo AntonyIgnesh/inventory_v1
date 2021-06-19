@@ -166,8 +166,68 @@ Future getAllProductsDetails() async {
         'Timestamp': element.get('Timestamp'),
       });
     });
+    print('Getting products details');
     // allProductsList.forEach((element) {
     //   print(element);
     // });
+  }
+}
+
+Future updateProductWithProductID(BuildContext context, String productId,
+    String productDesc, String size, String rate) async {
+  DateTime dateUnformatted = DateTime.now();
+  DateFormat dateFormatted = DateFormat('dd MMM yy');
+  String fullDateNeeded = dateFormatted.format(dateUnformatted);
+
+  var splitDate = fullDateNeeded.split(' ');
+  todayDate = splitDate[0];
+  todayMonth = splitDate[1];
+  todayYear = splitDate[2];
+  try {
+    if (productDesc.isNotEmpty || rate.isNotEmpty) {
+      await _fireStore
+          .collection('products')
+          .where(
+            "ProductId",
+            isEqualTo: productId,
+          )
+          .get()
+          .then(
+            (value) => value.docs.forEach(
+              (element) async {
+                String docId = element.id;
+                await _fireStore.collection('products').doc(docId).set(
+                  {
+                    'ProductId': productId,
+                    'ProductDescription': productDesc,
+                    'Size': size,
+                    'Rate': rate,
+                    'ProductAddDate': todayDate,
+                    'ProductAddMonth': todayMonth,
+                    'ProductAddYear': todayYear,
+                    'Timestamp': DateTime.now(),
+                  },
+                );
+                ShowingToast(context: context).showSuccessToast(
+                    "Product " + productId + " updated Successfully");
+                Navigator.pop(context);
+              },
+            ),
+          );
+    } else {
+      if (productDesc.isEmpty) {
+        ShowingToast(context: context).showFailureToast(
+          'Description is Mandatory',
+        );
+      } else if (rate.isEmpty) {
+        ShowingToast(context: context).showFailureToast(
+          'Rate is Mandatory',
+        );
+      }
+    }
+  } catch (e) {
+    ShowingToast(context: context).showFailureToast(
+      'Error in updating product ' + productId,
+    );
   }
 }
