@@ -49,7 +49,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             ),
           ),
           backgroundColor: kCardColor,
-          title: Text('Confirm'),
+          title: Text(
+            'Confirm',
+            style: TextStyle(fontSize: 20),
+          ),
           contentPadding: EdgeInsets.only(top: 10.0),
           content: Container(
             height: MediaQuery.of(context).size.height * 0.2,
@@ -58,7 +61,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(left: 15),
+                  padding: const EdgeInsets.only(left: 25),
                   child: Text(
                     'Are you sure you wish to delete ' + prodId + ' Product?',
                     style: TextStyle(
@@ -301,91 +304,82 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: MaterialButton(
-                              onPressed: () {},
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Expanded(
-                                    child: Icon(
-                                      FontAwesomeIcons.rupeeSign,
-                                      // size: 30,
+                          child: MaterialButton(
+                            onPressed: () {},
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Expanded(
+                                  child: Icon(
+                                    FontAwesomeIcons.rupeeSign,
+                                    color: kCardColor,
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Text(
+                                    'SELL',
+                                    style: TextStyle(
                                       color: kCardColor,
+                                      // fontWeight: FontWeight.w800,
                                     ),
                                   ),
-                                  Expanded(
-                                    child: Text(
-                                      'SELL',
-                                      style: TextStyle(
-                                        color: kCardColor,
-                                        fontSize: 20,
-                                        // fontWeight: FontWeight.w800,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              color: Colors.greenAccent,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(
-                                    30,
-                                  ),
+                                ),
+                              ],
+                            ),
+                            color: Colors.greenAccent,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(
+                                  30,
                                 ),
                               ),
                             ),
                           ),
                         ),
                         SizedBox(
-                          width: 10,
+                          width: 15,
                         ),
                         Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: MaterialButton(
-                              onPressed: () async {
-                                setState(() => widget.showLoading = true);
-                                await updateProductWithProductID(
-                                  context,
-                                  widget.productId,
-                                  widget.productDesc,
-                                  widget.size,
-                                  widget.rate,
-                                );
-                                setState(() => widget.showLoading = false);
-                                // print(widget.productDesc +
-                                //     widget.size +
-                                //     widget.rate);
-                              },
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    child: Icon(
-                                      Icons.check_circle_sharp,
+                          child: MaterialButton(
+                            onPressed: () async {
+                              setState(() => widget.showLoading = true);
+                              await updateProductWithProductID(
+                                context,
+                                widget.productId,
+                                widget.productDesc,
+                                widget.size,
+                                widget.rate,
+                              );
+                              setState(() => widget.showLoading = false);
+                              // print(widget.productDesc +
+                              //     widget.size +
+                              //     widget.rate);
+                            },
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Icon(
+                                    Icons.check_circle_sharp,
+                                    color: kCardColor,
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 2,
+                                  child: Text(
+                                    'UPDATE',
+                                    style: TextStyle(
                                       color: kCardColor,
+                                      // fontWeight: FontWeight.w800,
                                     ),
                                   ),
-                                  Expanded(
-                                    flex: 2,
-                                    child: Text(
-                                      'UPDATE',
-                                      style: TextStyle(
-                                        color: kCardColor,
-                                        fontSize: 20,
-                                        // fontWeight: FontWeight.w800,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              color: Colors.amberAccent,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(
-                                    30,
-                                  ),
+                                ),
+                              ],
+                            ),
+                            color: Colors.amberAccent,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(
+                                  30,
                                 ),
                               ),
                             ),

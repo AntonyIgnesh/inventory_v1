@@ -13,11 +13,11 @@ class ViewProductsScreen extends StatefulWidget {
 }
 
 class _ViewProductsScreenState extends State<ViewProductsScreen> {
-  List<Map> searchList = List.from(allProductsList);
-  onSearchingProduct(String value) {
-    setState(() {
-      searchList = allProductsList.toList();
-    });
+  FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+  String tempVal = '';
+  onSearching(String value) {
+    tempVal = value;
+    setState(() {});
   }
 
   @override
@@ -44,7 +44,12 @@ class _ViewProductsScreenState extends State<ViewProductsScreen> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               StreamBuilder<QuerySnapshot>(
-                  stream: getFireStoreInstanceStream(),
+                  stream: firebaseFirestore
+                      .collection('products')
+                      .where('ProductId', isGreaterThanOrEqualTo: tempVal)
+                      .where('ProductId', isLessThan: tempVal + 'z')
+                      .orderBy('ProductId')
+                      .snapshots(),
                   builder: (context, snapshot) {
                     if (!snapshot.hasData) {
                       return Center(
@@ -73,8 +78,11 @@ class _ViewProductsScreenState extends State<ViewProductsScreen> {
                                     Radius.circular(32.0),
                                   ),
                                 ),
-                                backgroundColor: Colors.blueGrey,
-                                // title: Text('Confirm'),
+                                backgroundColor: kCardColor,
+                                title: Text(
+                                  'Confirm',
+                                  style: TextStyle(fontSize: 20),
+                                ),
                                 contentPadding: EdgeInsets.only(top: 10.0),
                                 content: Container(
                                   height:
@@ -87,18 +95,7 @@ class _ViewProductsScreenState extends State<ViewProductsScreen> {
                                     children: [
                                       Padding(
                                         padding:
-                                            const EdgeInsets.only(left: 15),
-                                        child: Text(
-                                          'Confirm',
-                                          style: TextStyle(
-                                            fontSize: 25,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding:
-                                            const EdgeInsets.only(left: 15),
+                                            const EdgeInsets.only(left: 25),
                                         child: Text(
                                           'Are you sure you wish to delete $productId Product?',
                                           style: TextStyle(
@@ -234,6 +231,9 @@ class _ViewProductsScreenState extends State<ViewProductsScreen> {
                   children: [
                     Expanded(
                       child: TextField(
+                        onChanged: (value) {
+                          onSearching(value);
+                        },
                         style: TextStyle(
                           color: Colors.black,
                         ),

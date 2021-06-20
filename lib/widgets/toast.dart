@@ -28,10 +28,12 @@ class ShowingToast {
           SizedBox(
             width: 12.0,
           ),
-          Text(
-            textToBeDisplayed,
-            style: TextStyle(
-              color: Colors.green[900],
+          Expanded(
+            child: Text(
+              textToBeDisplayed,
+              style: TextStyle(
+                color: Colors.green[900],
+              ),
             ),
           ),
         ],

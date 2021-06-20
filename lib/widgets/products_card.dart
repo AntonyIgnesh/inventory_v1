@@ -56,9 +56,9 @@ class ProductsCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  productDesc.length < 40
+                  productDesc.length < 30
                       ? productDesc
-                      : productDesc.substring(0, 37) + '...',
+                      : productDesc.substring(0, 27) + '...',
                   style: kViewProductProductDescTextStyle,
                 ),
                 Text(

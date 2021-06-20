@@ -72,8 +72,8 @@ class _LandingScreenState extends State<LandingScreen> {
                               child: ReuseableCard(
                                 colour: kCardColor,
                                 cardChild: IconContent(
-                                  iconData: FontAwesomeIcons.syncAlt,
-                                  text: 'UPDATE',
+                                  iconData: FontAwesomeIcons.rupeeSign,
+                                  text: 'SALE',
                                 ), //Update
                               ),
                             ),
