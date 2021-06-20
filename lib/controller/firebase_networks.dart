@@ -166,7 +166,7 @@ Future getAllProductsDetails() async {
         'Timestamp': element.get('Timestamp'),
       });
     });
-    print('Getting products details');
+    // print('Getting products details');
     // allProductsList.forEach((element) {
     //   print(element);
     // });
@@ -184,7 +184,7 @@ Future updateProductWithProductID(BuildContext context, String productId,
   todayMonth = splitDate[1];
   todayYear = splitDate[2];
   try {
-    if (productDesc.isNotEmpty || rate.isNotEmpty) {
+    if (productDesc.isNotEmpty && rate.isNotEmpty) {
       await _fireStore
           .collection('products')
           .where(
@@ -229,5 +229,38 @@ Future updateProductWithProductID(BuildContext context, String productId,
     ShowingToast(context: context).showFailureToast(
       'Error in updating product ' + productId,
     );
+  }
+}
+
+Stream<QuerySnapshot<Map<String, dynamic>>> getFireStoreInstanceStream() {
+  var stream;
+  try {
+    stream = _fireStore.collection('products').snapshots();
+  } catch (e) {
+    print('Error in getting Firestore Stream');
+    stream = null;
+  }
+  return stream;
+}
+
+deleteProductFromFireStoreWithProductId(String productId) async {
+  try {
+    await _fireStore
+        .collection('products')
+        .where(
+          "ProductId",
+          isEqualTo: productId,
+        )
+        .get()
+        .then(
+          (value) => value.docs.forEach(
+            (element) async {
+              String docId = element.id;
+              await _fireStore.collection('products').doc(docId).delete();
+            },
+          ),
+        );
+  } catch (e) {
+    print('Error in deletion of Product');
   }
 }

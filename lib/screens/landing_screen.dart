@@ -33,6 +33,7 @@ class _LandingScreenState extends State<LandingScreen> {
       ),
       child: SafeArea(
         child: Scaffold(
+          resizeToAvoidBottomInset: false,
           appBar: AppBar(
             title: Text(
               'Mangal\'s Inventory',

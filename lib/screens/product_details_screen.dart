@@ -4,9 +4,11 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:inventory_v1/controller/firebase_networks.dart';
 import 'package:inventory_v1/widgets/sizes_dropdown.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
+import 'package:inventory_v1/widgets/toast.dart';
 
 class ProductDetailsScreen extends StatefulWidget {
   bool showLoading = false;
+  bool deleteValue = false;
   final String productId;
   String productDesc;
   final String productAddDate;
@@ -36,6 +38,92 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
 
   TextEditingController sizeController = TextEditingController();
 
+  showAlertDialog(BuildContext context, String prodId) async {
+    return await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(32.0),
+            ),
+          ),
+          backgroundColor: kCardColor,
+          title: Text('Confirm'),
+          contentPadding: EdgeInsets.only(top: 10.0),
+          content: Container(
+            height: MediaQuery.of(context).size.height * 0.2,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 15),
+                  child: Text(
+                    'Are you sure you wish to delete ' + prodId + ' Product?',
+                    style: TextStyle(
+                      fontSize: 17,
+                    ),
+                  ),
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: InkWell(
+                        onTap: () => Navigator.of(context).pop(),
+                        child: Container(
+                          padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
+                          decoration: BoxDecoration(
+                            color: Colors.red,
+                            borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(32.0),
+                            ),
+                          ),
+                          child: Text(
+                            'CANCEL',
+                            style: TextStyle(color: Colors.white),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: InkWell(
+                        onTap: () async {
+                          await deleteProductFromFireStoreWithProductId(
+                              widget.productId);
+                          ShowingToast(context: context).showSuccessToast(
+                              "Product " +
+                                  widget.productId +
+                                  " deleted Successfully");
+                          widget.deleteValue = true;
+                          Navigator.pop(context);
+                        },
+                        child: Container(
+                          padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
+                          decoration: BoxDecoration(
+                            color: Colors.green,
+                            borderRadius: BorderRadius.only(
+                                bottomRight: Radius.circular(32.0)),
+                          ),
+                          child: Text(
+                            'DELETE',
+                            style: TextStyle(color: Colors.white),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                )
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     productDescriptionController.text = widget.productDesc;
@@ -58,6 +146,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
         color: Colors.white,
       ),
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         appBar: AppBar(
           shadowColor: Colors.white,
           leading: IconButton(
@@ -265,7 +354,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                   widget.size,
                                   widget.rate,
                                 );
-                                await getAllProductsDetails();
                                 setState(() => widget.showLoading = false);
                                 // print(widget.productDesc +
                                 //     widget.size +
@@ -304,6 +392,33 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                           ),
                         ),
                       ],
+                    ),
+                    OutlinedButton(
+                      child: Text(
+                        'DELETE',
+                        style: TextStyle(
+                          color: Colors.red,
+                          fontSize: 17,
+                        ),
+                      ),
+                      style: ButtonStyle(
+                        side: MaterialStateProperty.all(
+                          BorderSide(
+                            color: Colors.red,
+                          ),
+                        ),
+                        shape: MaterialStateProperty.all(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30.0),
+                          ),
+                        ),
+                      ),
+                      onPressed: () async {
+                        await showAlertDialog(context, widget.productId);
+                        if (widget.deleteValue) {
+                          Navigator.pop(context);
+                        }
+                      },
                     ),
                     Text(
                       'ADDED ON : ${widget.productAddDate} ' +
