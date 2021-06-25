@@ -8,6 +8,7 @@ class AddProductsTextField extends StatelessWidget {
   final TextInputType textInputType;
   final int maxLines;
   final bool editable;
+  final bool obscureText;
   AddProductsTextField({
     this.lableTextForTextField,
     this.onChangeFunction,
@@ -15,6 +16,7 @@ class AddProductsTextField extends StatelessWidget {
     this.textInputType,
     this.maxLines,
     this.editable = true,
+    this.obscureText = false,
   });
 
   @override
@@ -32,6 +34,7 @@ class AddProductsTextField extends StatelessWidget {
         style: kAddProductTextFieldStyle,
         controller: controller,
         keyboardType: textInputType,
+        obscureText: obscureText,
         decoration: InputDecoration(
           filled: true,
           fillColor: Color(0xFFE2E3E3),

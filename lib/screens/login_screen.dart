@@ -1,11 +1,52 @@
 import 'package:flutter/material.dart';
 import 'package:inventory_v1/constants.dart';
+import 'login_bottomsheet.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class LoginScreen extends StatelessWidget {
+bool alreadyLoggedIn;
+String emailId;
+String password;
+
+class LoginScreen extends StatefulWidget {
+  final String id = '/loginScreen';
+  @override
+  _LoginScreenState createState() => _LoginScreenState();
+}
+
+Future onLoginPressed() async {
+  final prefs = await SharedPreferences.getInstance();
+  alreadyLoggedIn = prefs.getBool('alreadyLoggedIn') ?? false;
+  emailId = prefs.getString('emailId') ?? '';
+  password = prefs.getString('password') ?? '';
+  print(alreadyLoggedIn);
+  print(emailId);
+  print(password);
+}
+
+class _LoginScreenState extends State<LoginScreen>
+    with SingleTickerProviderStateMixin {
+  AnimationController rotationController;
+  @override
+  void initState() {
+    super.initState();
+    rotationController = AnimationController(
+      vsync: this,
+      duration: Duration(seconds: 7),
+    );
+    rotationController.repeat();
+  }
+
+  @override
+  void dispose() {
+    rotationController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         backgroundColor: Colors.white,
         body: CustomPaint(
           painter: BottomCurvePainter(),
@@ -13,20 +54,6 @@ class LoginScreen extends StatelessWidget {
             painter: CurvePainter(),
             child: Stack(
               children: [
-                // Column(
-                //   children: [
-                //     Expanded(
-                //       child: Container(
-                //         color: kCardColor,
-                //       ),
-                //     ),
-                //     Expanded(
-                //       child: Container(
-                //         color: Colors.white,
-                //       ),
-                //     ),
-                //   ],
-                // ),
                 Center(
                   child: CircleAvatar(
                     backgroundColor: Colors.white,
@@ -58,15 +85,33 @@ class LoginScreen extends StatelessWidget {
                   child: Container(
                     height: 50,
                     width: 150,
-                    margin: EdgeInsets.only(bottom: 100),
+                    margin: EdgeInsets.only(
+                        bottom: MediaQuery.of(context).size.height / 7),
                     child: MaterialButton(
                       elevation: 8,
                       child: Text(
                         'LOGIN',
-                        style: TextStyle(fontSize: 25),
+                        style: TextStyle(fontSize: 20),
                       ),
-                      onPressed: () {
-                        Navigator.pushNamed(context, '/landingScreen');
+                      onPressed: () async {
+                        await onLoginPressed();
+                        showModalBottomSheet(
+                          backgroundColor: Colors.black.withOpacity(0.0),
+                          isScrollControlled: true,
+                          context: context,
+                          builder: (context) => SingleChildScrollView(
+                            child: Container(
+                              padding: EdgeInsets.only(
+                                  bottom:
+                                      MediaQuery.of(context).viewInsets.bottom),
+                              child: LoginBottomsheet(
+                                alreadyLoggedIn: alreadyLoggedIn,
+                                emailId: emailId,
+                                password: password,
+                              ),
+                            ),
+                          ),
+                        );
                       },
                       color: kCardColor,
                       shape: RoundedRectangleBorder(
@@ -114,6 +159,23 @@ class LoginScreen extends StatelessWidget {
                         ),
                       ],
                     ),
+                  ),
+                ),
+                Container(
+                  alignment: Alignment.topCenter,
+                  margin: EdgeInsets.only(top: 10),
+                  child: AnimatedBuilder(
+                    animation: rotationController,
+                    child: Icon(
+                      Icons.star,
+                      size: 35,
+                    ),
+                    builder: (BuildContext context, Widget _widget) {
+                      return Transform.rotate(
+                        angle: rotationController.value * 6.3,
+                        child: _widget,
+                      );
+                    },
                   ),
                 ),
               ],

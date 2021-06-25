@@ -8,6 +8,7 @@ import 'package:inventory_v1/screens/product_details_screen.dart';
 import 'package:inventory_v1/widgets/toast.dart';
 
 class ViewProductsScreen extends StatefulWidget {
+  final String id = '/viewProductsScreen';
   @override
   _ViewProductsScreenState createState() => _ViewProductsScreenState();
 }

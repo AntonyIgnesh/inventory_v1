@@ -5,12 +5,13 @@ import 'total_asset_screen.dart';
 import 'add_products_screen.dart';
 import 'package:inventory_v1/widgets/icon_content.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:firebase_core/firebase_core.dart';
+
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:inventory_v1/controller/firebase_networks.dart';
 import 'package:inventory_v1/widgets/sizes_dropdown.dart';
 
 class LandingScreen extends StatefulWidget {
+  final String id = '/landingScreen';
   @override
   _LandingScreenState createState() => _LandingScreenState();
 }
@@ -20,7 +21,6 @@ class _LandingScreenState extends State<LandingScreen> {
   @override
   void initState() {
     super.initState();
-    Firebase.initializeApp().whenComplete(() => print('FireBase is UP'));
   }
 
   @override
@@ -35,6 +35,7 @@ class _LandingScreenState extends State<LandingScreen> {
         child: Scaffold(
           resizeToAvoidBottomInset: false,
           appBar: AppBar(
+            automaticallyImplyLeading: false,
             title: Text(
               'Mangal\'s Inventory',
             ),

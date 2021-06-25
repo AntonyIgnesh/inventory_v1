@@ -7,6 +7,7 @@ import 'package:inventory_v1/controller/firebase_networks.dart';
 import 'package:inventory_v1/widgets/sizes_dropdown.dart';
 
 class AddProductsScreen extends StatefulWidget {
+  final String id = '/addProductsScreen';
   @override
   _AddProductsScreenState createState() => _AddProductsScreenState();
 }
