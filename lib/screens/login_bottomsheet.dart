@@ -1,26 +1,41 @@
 import 'package:flutter/material.dart';
 import 'package:inventory_v1/constants.dart';
-import 'package:inventory_v1/widgets/add_products_text_field.dart';
 import 'landing_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 final _fireauth = FirebaseAuth.instance;
 TextEditingController userIdController = TextEditingController();
+bool loginFail = false;
 
 Widget showEditableUserIDField() {
-  return AddProductsTextField(
-    lableTextForTextField: 'User ID',
-    textInputType: TextInputType.emailAddress,
-    onChangeFunction: (value) {
+  return TextField(
+    maxLines: 1,
+    onChanged: (value) {
       userIdController.text = value;
     },
+    style: kAddProductTextFieldStyle,
+    keyboardType: TextInputType.emailAddress,
+    decoration: InputDecoration(
+      errorText: loginFail ? 'Please check the UserId' : null,
+      errorBorder: kAddProductTextFieldErrorBorder,
+      filled: true,
+      fillColor: Color(0xFFE2E3E3),
+      labelText: 'User ID',
+      labelStyle: kAddProductTextFieldLableStyle,
+      contentPadding: EdgeInsets.all(10),
+      border: kAddProductTextFieldBorder,
+      focusedBorder: loginFail == false
+          ? kAddProductTextFieldFocusedBorder
+          : kAddProductTextFieldErrorBorder,
+      // enabledBorder: kAddProductTextFieldEnabledBorder,
+    ),
   );
 }
 
 Widget showNonEditableUserIDField(String emailId) {
   return Text(
-    emailId,
+    'User ID: ' + emailId,
     style: TextStyle(
       color: Colors.black,
     ),
@@ -84,14 +99,28 @@ class _LoginBottomsheetState extends State<LoginBottomsheet> {
             SizedBox(
               height: 15,
             ),
-            AddProductsTextField(
-              lableTextForTextField: 'Password',
-              textInputType: TextInputType.emailAddress,
-              obscureText: true,
+            TextField(
               maxLines: 1,
-              onChangeFunction: (value) {
+              onChanged: (value) {
                 passwordController.text = value;
               },
+              style: kAddProductTextFieldStyle,
+              keyboardType: TextInputType.emailAddress,
+              obscureText: true,
+              decoration: InputDecoration(
+                errorText: loginFail ? 'Please check the password' : null,
+                errorBorder: kAddProductTextFieldErrorBorder,
+                filled: true,
+                fillColor: Color(0xFFE2E3E3),
+                labelText: 'Password',
+                labelStyle: kAddProductTextFieldLableStyle,
+                contentPadding: EdgeInsets.all(10),
+                border: kAddProductTextFieldBorder,
+                focusedBorder: loginFail == false
+                    ? kAddProductTextFieldFocusedBorder
+                    : kAddProductTextFieldErrorBorder,
+                // enabledBorder: kAddProductTextFieldEnabledBorder,
+              ),
             ),
             SizedBox(
               height: 20,
@@ -104,25 +133,35 @@ class _LoginBottomsheetState extends State<LoginBottomsheet> {
                 style: TextStyle(fontSize: 20),
               ),
               onPressed: () async {
-                final loginUser = await _fireauth.signInWithEmailAndPassword(
-                  email: widget.alreadyLoggedIn == true
-                      ? widget.emailId
-                      : userIdController.text,
-                  password: passwordController.text,
-                );
-                if (loginUser != null) {
-                  final prefs = await SharedPreferences.getInstance();
-                  prefs.setBool('alreadyLoggedIn', true);
-                  prefs.setString('emailId', userIdController.text);
-                  prefs.setString('password', passwordController.text);
-
-                  Navigator.pushNamedAndRemoveUntil(
-                    context,
-                    LandingScreen().id,
-                    (r) => false,
+                try {
+                  final loginUser = await _fireauth.signInWithEmailAndPassword(
+                    email: widget.alreadyLoggedIn == true
+                        ? widget.emailId
+                        : userIdController.text,
+                    password: passwordController.text,
                   );
-                } else {
-                  print('Check your creds');
+                  if (loginUser != null) {
+                    setState(() {
+                      loginFail = false;
+                    });
+
+                    final prefs = await SharedPreferences.getInstance();
+                    prefs.setBool('alreadyLoggedIn', true);
+                    widget.alreadyLoggedIn == true
+                        ? prefs.setString('emailId', widget.emailId)
+                        : prefs.setString('emailId', userIdController.text);
+                    prefs.setString('password', passwordController.text);
+
+                    Navigator.pushNamedAndRemoveUntil(
+                      context,
+                      LandingScreen().id,
+                      (r) => false,
+                    );
+                  }
+                } catch (e) {
+                  setState(() {
+                    loginFail = true;
+                  });
                 }
               },
               color: kCardColor,

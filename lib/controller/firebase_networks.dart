@@ -52,7 +52,6 @@ Future generateDocumentID() async {
         productDocumentIdList.add(data.id);
       });
       productDocumentIdList.sort();
-      print(productDocumentIdList);
       lastAddedProductDocumentId =
           int.parse(productDocumentIdList.last.substring(7));
       newProductDocumentId = lastAddedProductDocumentId + 1;
@@ -173,16 +172,16 @@ Future getAllProductsDetails() async {
   }
 }
 
-Future updateProductWithProductID(BuildContext context, String productId,
-    String productDesc, String size, String rate) async {
-  DateTime dateUnformatted = DateTime.now();
-  DateFormat dateFormatted = DateFormat('dd MMM yy');
-  String fullDateNeeded = dateFormatted.format(dateUnformatted);
-
-  var splitDate = fullDateNeeded.split(' ');
-  todayDate = splitDate[0];
-  todayMonth = splitDate[1];
-  todayYear = splitDate[2];
+Future updateProductWithProductID(
+  BuildContext context,
+  String productId,
+  String productDesc,
+  String size,
+  String rate,
+  String addDate,
+  String addMonth,
+  String addYear,
+) async {
   try {
     if (productDesc.isNotEmpty && rate.isNotEmpty) {
       await _fireStore
@@ -202,9 +201,9 @@ Future updateProductWithProductID(BuildContext context, String productId,
                     'ProductDescription': productDesc,
                     'Size': size,
                     'Rate': rate,
-                    'ProductAddDate': todayDate,
-                    'ProductAddMonth': todayMonth,
-                    'ProductAddYear': todayYear,
+                    'ProductAddDate': addDate,
+                    'ProductAddMonth': addMonth,
+                    'ProductAddYear': addYear,
                     'Timestamp': DateTime.now(),
                   },
                 );

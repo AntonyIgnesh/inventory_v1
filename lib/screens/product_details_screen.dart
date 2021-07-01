@@ -349,6 +349,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                 widget.productDesc,
                                 widget.size,
                                 widget.rate,
+                                widget.productAddDate,
+                                widget.productAddMonth,
+                                widget.productAddYear,
                               );
                               setState(() => widget.showLoading = false);
                               // print(widget.productDesc +

@@ -46,6 +46,16 @@ const kAddProductTextFieldFocusedBorder = OutlineInputBorder(
   ),
 );
 
+const kAddProductTextFieldErrorBorder = OutlineInputBorder(
+  borderRadius: BorderRadius.all(
+    Radius.circular(20.0),
+  ),
+  borderSide: BorderSide(
+    color: Colors.red,
+    width: 2.0,
+  ),
+);
+
 const kAddProductTextFieldEnabledBorder = OutlineInputBorder(
   borderRadius: BorderRadius.all(
     Radius.circular(20.0),

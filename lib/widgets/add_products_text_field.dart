@@ -9,6 +9,7 @@ class AddProductsTextField extends StatelessWidget {
   final int maxLines;
   final bool editable;
   final bool obscureText;
+  final String errorText;
   AddProductsTextField({
     this.lableTextForTextField,
     this.onChangeFunction,
@@ -17,6 +18,7 @@ class AddProductsTextField extends StatelessWidget {
     this.maxLines,
     this.editable = true,
     this.obscureText = false,
+    this.errorText,
   });
 
   @override
@@ -36,6 +38,8 @@ class AddProductsTextField extends StatelessWidget {
         keyboardType: textInputType,
         obscureText: obscureText,
         decoration: InputDecoration(
+          errorText: errorText,
+          errorBorder: kAddProductTextFieldErrorBorder,
           filled: true,
           fillColor: Color(0xFFE2E3E3),
           labelText: lableTextForTextField,

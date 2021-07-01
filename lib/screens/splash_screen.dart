@@ -15,7 +15,7 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     Firebase.initializeApp().whenComplete(() => print('FireBase is UP'));
     Timer(
-      Duration(seconds: 5),
+      Duration(seconds: 3),
       () => Navigator.pushReplacementNamed(
         context,
         LoginScreen().id,

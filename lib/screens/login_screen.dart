@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:inventory_v1/constants.dart';
 import 'login_bottomsheet.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:inventory_v1/controller/firebase_networks.dart';
+import 'view_products_screen.dart';
 
 bool alreadyLoggedIn;
 String emailId;
@@ -14,6 +17,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 Future onLoginPressed() async {
+  await getSizesFromFireBase();
   final prefs = await SharedPreferences.getInstance();
   alreadyLoggedIn = prefs.getBool('alreadyLoggedIn') ?? false;
   emailId = prefs.getString('emailId') ?? '';
@@ -24,21 +28,52 @@ Future onLoginPressed() async {
 }
 
 class _LoginScreenState extends State<LoginScreen>
-    with SingleTickerProviderStateMixin {
-  AnimationController rotationController;
+    with TickerProviderStateMixin {
+  AnimationController hammerAnimationController;
+  AnimationController cogAnimationController;
+  AnimationController cog1AnimationController;
   @override
   void initState() {
     super.initState();
-    rotationController = AnimationController(
+    hammerAnimationController = AnimationController(
       vsync: this,
-      duration: Duration(seconds: 7),
+      duration: Duration(seconds: 2),
     );
-    rotationController.repeat();
+    cogAnimationController = AnimationController(
+      vsync: this,
+      duration: Duration(seconds: 3),
+    );
+    cog1AnimationController = AnimationController(
+      vsync: this,
+      duration: Duration(seconds: 9),
+    );
+    hammerAnimationController.forward();
+    cogAnimationController.repeat();
+    cog1AnimationController.repeat();
+
+    hammerAnimationController.addListener(() {
+      setState(() {
+        if (hammerAnimationController.isCompleted) {
+          hammerAnimationController.reverse().whenComplete(
+                () => hammerAnimationController.forward(),
+              );
+        }
+      });
+    });
+
+    cogAnimationController.addListener(() {
+      setState(() {});
+    });
+    cog1AnimationController.addListener(() {
+      setState(() {});
+    });
   }
 
   @override
   void dispose() {
-    rotationController.dispose();
+    hammerAnimationController.dispose();
+    cogAnimationController.dispose();
+    cog1AnimationController.dispose();
     super.dispose();
   }
 
@@ -161,21 +196,130 @@ class _LoginScreenState extends State<LoginScreen>
                     ),
                   ),
                 ),
-                Container(
-                  alignment: Alignment.topCenter,
-                  margin: EdgeInsets.only(top: 10),
-                  child: AnimatedBuilder(
-                    animation: rotationController,
-                    child: Icon(
-                      Icons.star,
-                      size: 35,
+                // Positioned(
+                //   width: MediaQuery.of(context).size.width * .05,
+                //   top: MediaQuery.of(context).size.width * 0.05,
+                //   child: Container(
+                //     alignment: Alignment.topCenter,
+                //     margin: EdgeInsets.only(top: 10),
+                //     child: Transform.rotate(
+                //       alignment: Alignment.bottomRight,
+                //       angle: hammerAnimationController.value * (3.14 * 0.7),
+                //       child: Transform.rotate(
+                //         angle: -(3.14 / 2),
+                //         child: FaIcon(
+                //           FontAwesomeIcons.hammer,
+                //           size: hammerAnimationController.value * 55,
+                //         ),
+                //       ),
+                //     ),
+                //   ),
+                // ),
+                Positioned(
+                  width: MediaQuery.of(context).size.width * 0.3,
+                  top: MediaQuery.of(context).size.width * 0.1,
+                  child: Container(
+                    alignment: Alignment.topCenter,
+                    margin: EdgeInsets.only(top: 10),
+                    child: Transform.rotate(
+                      alignment: Alignment.center,
+                      angle: cog1AnimationController.value,
+                      child: FaIcon(
+                        FontAwesomeIcons.cog,
+                        size: 50,
+                        color: Colors.grey,
+                      ),
                     ),
-                    builder: (BuildContext context, Widget _widget) {
-                      return Transform.rotate(
-                        angle: rotationController.value * 6.3,
-                        child: _widget,
-                      );
-                    },
+                  ),
+                ),
+                Positioned(
+                  width: MediaQuery.of(context).size.width * 0.4,
+                  top: MediaQuery.of(context).size.width * 0.23,
+                  child: Container(
+                    alignment: Alignment.topCenter,
+                    margin: EdgeInsets.only(top: 10),
+                    child: Transform.rotate(
+                      alignment: Alignment.center,
+                      angle: -cog1AnimationController.value,
+                      child: FaIcon(
+                        FontAwesomeIcons.cog,
+                        size: 30,
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ),
+                ),
+                Positioned(
+                  width: MediaQuery.of(context).size.width * 0.2,
+                  top: MediaQuery.of(context).size.width * 0.23,
+                  child: Container(
+                    alignment: Alignment.topCenter,
+                    margin: EdgeInsets.only(top: 10),
+                    child: Transform.rotate(
+                      alignment: Alignment.center,
+                      angle: -cog1AnimationController.value,
+                      child: FaIcon(
+                        FontAwesomeIcons.cog,
+                        size: 20,
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ),
+                ),
+                Positioned(
+                  width: MediaQuery.of(context).size.width * 1.5,
+                  top: -MediaQuery.of(context).size.height * 0.02,
+                  child: Container(
+                    alignment: Alignment.topCenter,
+                    margin: EdgeInsets.only(top: 10),
+                    child: Transform.rotate(
+                      alignment: Alignment.center,
+                      angle: -(3.14 / 4),
+                      child: Transform.rotate(
+                        angle: (3.14),
+                        child: FaIcon(
+                          FontAwesomeIcons.wrench,
+                          size: 55,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Positioned(
+                  width: MediaQuery.of(context).size.width * 1.8,
+                  top: -MediaQuery.of(context).size.height * 0.06,
+                  child: Container(
+                    alignment: Alignment.topCenter,
+                    margin: EdgeInsets.only(top: 10),
+                    child: Transform.rotate(
+                      alignment: Alignment.bottomRight,
+                      angle: -(3.14 / 4),
+                      child: Transform.rotate(
+                        angle: (3.14),
+                        child: FaIcon(
+                          FontAwesomeIcons.screwdriver,
+                          size: 75,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Positioned(
+                  width: MediaQuery.of(context).size.width * 2,
+                  top: MediaQuery.of(context).size.width * 0.9,
+                  child: Container(
+                    alignment: Alignment.topCenter,
+                    margin: EdgeInsets.only(top: 10),
+                    child: Transform.rotate(
+                      alignment: Alignment.center,
+                      angle: cogAnimationController.value,
+                      child: FaIcon(
+                        FontAwesomeIcons.cog,
+                        size: 100,
+                      ),
+                    ),
                   ),
                 ),
               ],
