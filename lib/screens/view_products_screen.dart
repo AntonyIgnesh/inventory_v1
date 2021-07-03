@@ -6,9 +6,9 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:inventory_v1/controller/firebase_networks.dart';
 import 'package:inventory_v1/screens/product_details_screen.dart';
 import 'package:inventory_v1/widgets/toast.dart';
-import 'package:inventory_v1/widgets/view_products_size_list.dart';
 
-List<Widget> sizesHorizontalList;
+List<Map<String, dynamic>> sizesHorizontalList;
+Map<String, dynamic> mapOfList;
 
 class ViewProductsScreen extends StatefulWidget {
   final String id = '/viewProductsScreen';
@@ -24,7 +24,11 @@ class _ViewProductsScreenState extends State<ViewProductsScreen> {
   }
 
   String tempVal = '';
+  String sizeFilterSelection = '';
+
+  int previouslySelectedSizeIndex;
   int productsListedBelow = 0;
+  TextEditingController searchController = new TextEditingController();
 
   onSearching(String value) {
     tempVal = value;
@@ -34,60 +38,28 @@ class _ViewProductsScreenState extends State<ViewProductsScreen> {
   getSizesList() {
     if (sizeFromFireStore != null) {
       sizesHorizontalList = [];
+      mapOfList = {};
       for (String sizeForList in sizeFromFireStore.data().values) {
-        var newItem = GestureDetector(
-          onTap: () {
-            print(sizeForList);
-            setState(() {});
-          },
-          child: Card(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
-            color: Colors.white54,
-            elevation: 6,
-            child: Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Center(
-                child: Text(
-                  sizeForList,
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w400,
-                    color: Colors.black,
-                  ),
-                ),
-              ),
-            ),
-          ),
-        );
-        sizesHorizontalList.add(newItem);
+        mapOfList = {
+          'size': sizeForList,
+          'color': Colors.white54,
+        };
+        sizesHorizontalList.add(mapOfList);
       }
-      print('inside if' + sizesHorizontalList.toString());
+      print(sizesHorizontalList);
     } else {
-      sizesHorizontalList = [];
-      for (String sizeForList in sizeFromFireStore.data().values) {
-        var newItem = Card(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
-          color: Colors.white,
-          elevation: 6,
-          child: Text(
-            sizeForList,
-            style: TextStyle(
-              color: Colors.black,
-            ),
-          ),
-        );
-        sizesHorizontalList.add(newItem);
-      }
-      print('inside else' + sizesHorizontalList.toString());
+      print('Error');
     }
+    // return sizesHorizontalList;
   }
 
   @override
   Widget build(BuildContext context) {
+    searchController.selection = TextSelection.fromPosition(
+      TextPosition(
+        offset: searchController.text.length,
+      ),
+    );
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -141,10 +113,8 @@ class _ViewProductsScreenState extends State<ViewProductsScreen> {
                             .toString()
                             .toLowerCase()
                             .contains(tempVal.toLowerCase()) ||
-                        size
-                            .toString()
-                            .toLowerCase()
-                            .contains(tempVal.toLowerCase())) {
+                        size.toString().toLowerCase().trim() ==
+                            tempVal.toLowerCase().trim()) {
                       productsListedBelow += 1;
                       final productCardWidget = Dismissible(
                         confirmDismiss: (direction) async {
@@ -307,8 +277,73 @@ class _ViewProductsScreenState extends State<ViewProductsScreen> {
                   );
                 },
               ),
-              ViewProductsSizeList(
-                sizeList: sizesHorizontalList,
+              // ViewProductsSizeList(
+              //   sizeList: sizesHorizontalList,
+              // ),
+              Container(
+                height: 45,
+                width: MediaQuery.of(context).size.width,
+                child: ListView.builder(
+                  keyboardDismissBehavior:
+                      ScrollViewKeyboardDismissBehavior.onDrag,
+                  scrollDirection: Axis.horizontal,
+                  shrinkWrap: true,
+                  itemCount: sizesHorizontalList.length,
+                  itemBuilder: (context, index) {
+                    return GestureDetector(
+                      onTap: () {
+                        searchController.clear();
+                        if (previouslySelectedSizeIndex == null) {
+                          previouslySelectedSizeIndex = index;
+                        }
+
+                        sizeFilterSelection =
+                            sizesHorizontalList[index]['size'];
+
+                        setState(() {
+                          if ((sizesHorizontalList[index]['color'] ==
+                                  Colors.white54) &&
+                              previouslySelectedSizeIndex != index) {
+                            sizesHorizontalList[previouslySelectedSizeIndex]
+                                ['color'] = Colors.white54;
+                            sizesHorizontalList[index]['color'] = Colors.white;
+                            onSearching(sizeFilterSelection);
+                          } else if ((sizesHorizontalList[index]['color'] ==
+                                  Colors.white54) &&
+                              previouslySelectedSizeIndex == index) {
+                            sizesHorizontalList[index]['color'] = Colors.white;
+                            onSearching(sizeFilterSelection);
+                          } else {
+                            sizesHorizontalList[index]['color'] =
+                                Colors.white54;
+                            onSearching('');
+                          }
+                        });
+                        previouslySelectedSizeIndex = index;
+                      },
+                      child: Card(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        color: sizesHorizontalList[index]['color'],
+                        elevation: 6,
+                        child: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Center(
+                            child: Text(
+                              sizesHorizontalList[index]['size'],
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
               ),
               Container(
                 child: Row(
@@ -316,6 +351,20 @@ class _ViewProductsScreenState extends State<ViewProductsScreen> {
                   children: [
                     Expanded(
                       child: TextField(
+                        onTap: () {
+                          onSearching('');
+                          sizesHorizontalList.forEach((element) {
+                            element.forEach((key, value) {
+                              if (key == 'color' && value == Colors.white) {
+                                element.update(
+                                    'color', (value) => Colors.white54);
+                                print(sizesHorizontalList);
+                                setState(() {});
+                              }
+                            });
+                          });
+                        },
+                        controller: searchController,
                         onChanged: (value) {
                           onSearching(value);
                         },

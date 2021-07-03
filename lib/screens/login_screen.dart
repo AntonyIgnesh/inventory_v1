@@ -4,7 +4,6 @@ import 'login_bottomsheet.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:inventory_v1/controller/firebase_networks.dart';
-import 'view_products_screen.dart';
 
 bool alreadyLoggedIn;
 String emailId;
