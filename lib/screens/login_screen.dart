@@ -4,6 +4,7 @@ import 'login_bottomsheet.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:inventory_v1/controller/firebase_networks.dart';
+import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
 bool alreadyLoggedIn;
 String emailId;
@@ -21,44 +22,36 @@ Future onLoginPressed() async {
   alreadyLoggedIn = prefs.getBool('alreadyLoggedIn') ?? false;
   emailId = prefs.getString('emailId') ?? '';
   password = prefs.getString('password') ?? '';
-  print(alreadyLoggedIn);
-  print(emailId);
-  print(password);
 }
 
 class _LoginScreenState extends State<LoginScreen>
     with TickerProviderStateMixin {
-  AnimationController hammerAnimationController;
+  bool showLoading = false;
   AnimationController cogAnimationController;
   AnimationController cog1AnimationController;
   @override
   void initState() {
     super.initState();
-    hammerAnimationController = AnimationController(
-      vsync: this,
-      duration: Duration(seconds: 2),
-    );
     cogAnimationController = AnimationController(
       vsync: this,
       duration: Duration(seconds: 3),
     );
     cog1AnimationController = AnimationController(
       vsync: this,
-      duration: Duration(seconds: 9),
+      duration: Duration(seconds: 1),
     );
-    hammerAnimationController.forward();
     cogAnimationController.repeat();
     cog1AnimationController.repeat();
 
-    hammerAnimationController.addListener(() {
-      setState(() {
-        if (hammerAnimationController.isCompleted) {
-          hammerAnimationController.reverse().whenComplete(
-                () => hammerAnimationController.forward(),
-              );
-        }
-      });
-    });
+    // hammerAnimationController.addListener(() {
+    //   setState(() {
+    //     if (hammerAnimationController.isCompleted) {
+    //       hammerAnimationController.reverse().whenComplete(
+    //             () => hammerAnimationController.forward(),
+    //           );
+    //     }
+    //   });
+    // });
 
     cogAnimationController.addListener(() {
       setState(() {});
@@ -70,7 +63,6 @@ class _LoginScreenState extends State<LoginScreen>
 
   @override
   void dispose() {
-    hammerAnimationController.dispose();
     cogAnimationController.dispose();
     cog1AnimationController.dispose();
     super.dispose();
@@ -79,249 +71,240 @@ class _LoginScreenState extends State<LoginScreen>
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        backgroundColor: Colors.white,
-        body: CustomPaint(
-          painter: BottomCurvePainter(),
-          child: CustomPaint(
-            painter: CurvePainter(),
-            child: Stack(
-              children: [
-                Center(
-                  child: CircleAvatar(
-                    backgroundColor: Colors.white,
-                    radius: 110,
-                  ),
-                ),
-                Center(
-                  child: CircleAvatar(
-                    backgroundColor: Colors.red,
-                    radius: 104,
-                  ),
-                ),
-                Center(
-                  child: CircleAvatar(
-                    child: Text(
-                      'LMNS',
-                      style: TextStyle(
-                        color: Colors.red,
-                        fontSize: 55,
-                        fontWeight: FontWeight.bold,
-                      ),
+      child: ModalProgressHUD(
+        inAsyncCall: showLoading,
+        opacity: 0.1,
+        progressIndicator: CircularProgressIndicator(
+          color: Colors.white,
+        ),
+        child: Scaffold(
+          resizeToAvoidBottomInset: false,
+          backgroundColor: Colors.white,
+          body: CustomPaint(
+            painter: BottomCurvePainter(),
+            child: CustomPaint(
+              painter: CurvePainter(),
+              child: Stack(
+                children: [
+                  Center(
+                    child: CircleAvatar(
+                      backgroundColor: Colors.white,
+                      radius: 110,
                     ),
-                    backgroundColor: Colors.white,
-                    radius: 100,
                   ),
-                ),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Container(
-                    height: 50,
-                    width: 150,
-                    margin: EdgeInsets.only(
-                        bottom: MediaQuery.of(context).size.height / 7),
-                    child: MaterialButton(
-                      elevation: 8,
+                  Center(
+                    child: CircleAvatar(
+                      backgroundColor: Colors.red,
+                      radius: 104,
+                    ),
+                  ),
+                  Center(
+                    child: CircleAvatar(
                       child: Text(
-                        'LOGIN',
-                        style: TextStyle(fontSize: 20),
+                        'LMNS',
+                        style: TextStyle(
+                          color: Colors.red,
+                          fontSize: 55,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                      onPressed: () async {
-                        await onLoginPressed();
-                        showModalBottomSheet(
-                          backgroundColor: Colors.black.withOpacity(0.0),
-                          isScrollControlled: true,
-                          context: context,
-                          builder: (context) => SingleChildScrollView(
-                            child: Container(
-                              padding: EdgeInsets.only(
-                                  bottom:
-                                      MediaQuery.of(context).viewInsets.bottom),
-                              child: LoginBottomsheet(
-                                alreadyLoggedIn: alreadyLoggedIn,
-                                emailId: emailId,
-                                password: password,
+                      backgroundColor: Colors.white,
+                      radius: 100,
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Container(
+                      height: 50,
+                      width: 150,
+                      margin: EdgeInsets.only(
+                          bottom: MediaQuery.of(context).size.height / 7),
+                      child: MaterialButton(
+                        elevation: 8,
+                        child: Text(
+                          'LOGIN',
+                          style: TextStyle(fontSize: 20),
+                        ),
+                        onPressed: () async {
+                          setState(() => showLoading = true);
+                          await onLoginPressed();
+                          setState(() => showLoading = false);
+                          showModalBottomSheet(
+                            backgroundColor: Colors.black.withOpacity(0.0),
+                            isScrollControlled: true,
+                            context: context,
+                            builder: (context) => SingleChildScrollView(
+                              child: Container(
+                                padding: EdgeInsets.only(
+                                    bottom: MediaQuery.of(context)
+                                        .viewInsets
+                                        .bottom),
+                                child: LoginBottomsheet(
+                                  alreadyLoggedIn: alreadyLoggedIn,
+                                  emailId: emailId,
+                                  password: password,
+                                ),
                               ),
                             ),
-                          ),
-                        );
-                      },
-                      color: kCardColor,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(25),
-                      ),
-                    ),
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.bottomRight,
-                  child: Container(
-                    margin: EdgeInsets.only(bottom: 10, right: 20),
-                    child: GestureDetector(
-                      onTap: () {},
-                      child: Text(
-                        'CONTACT US',
-                        style: TextStyle(
-                          fontSize: 13,
-                          color: Colors.grey,
+                          );
+                        },
+                        color: kCardColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(25),
                         ),
                       ),
                     ),
                   ),
-                ),
-                Align(
-                  alignment: Alignment.bottomLeft,
-                  child: Container(
-                    margin: EdgeInsets.only(bottom: 10, left: 20),
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.copyright,
-                          color: Colors.grey,
-                          size: 13,
-                        ),
-                        SizedBox(
-                          width: 5,
-                        ),
-                        Text(
-                          'Anto App Solutions',
+                  Align(
+                    alignment: Alignment.bottomRight,
+                    child: Container(
+                      margin: EdgeInsets.only(bottom: 10, right: 20),
+                      child: GestureDetector(
+                        onTap: () {},
+                        child: Text(
+                          'CONTACT US',
                           style: TextStyle(
                             fontSize: 13,
                             color: Colors.grey,
                           ),
                         ),
-                      ],
-                    ),
-                  ),
-                ),
-                // Positioned(
-                //   width: MediaQuery.of(context).size.width * .05,
-                //   top: MediaQuery.of(context).size.width * 0.05,
-                //   child: Container(
-                //     alignment: Alignment.topCenter,
-                //     margin: EdgeInsets.only(top: 10),
-                //     child: Transform.rotate(
-                //       alignment: Alignment.bottomRight,
-                //       angle: hammerAnimationController.value * (3.14 * 0.7),
-                //       child: Transform.rotate(
-                //         angle: -(3.14 / 2),
-                //         child: FaIcon(
-                //           FontAwesomeIcons.hammer,
-                //           size: hammerAnimationController.value * 55,
-                //         ),
-                //       ),
-                //     ),
-                //   ),
-                // ),
-                Positioned(
-                  width: MediaQuery.of(context).size.width * 0.3,
-                  top: MediaQuery.of(context).size.width * 0.1,
-                  child: Container(
-                    alignment: Alignment.topCenter,
-                    margin: EdgeInsets.only(top: 10),
-                    child: Transform.rotate(
-                      alignment: Alignment.center,
-                      angle: cog1AnimationController.value,
-                      child: FaIcon(
-                        FontAwesomeIcons.cog,
-                        size: 50,
-                        color: Colors.grey,
                       ),
                     ),
                   ),
-                ),
-                Positioned(
-                  width: MediaQuery.of(context).size.width * 0.4,
-                  top: MediaQuery.of(context).size.width * 0.23,
-                  child: Container(
-                    alignment: Alignment.topCenter,
-                    margin: EdgeInsets.only(top: 10),
-                    child: Transform.rotate(
-                      alignment: Alignment.center,
-                      angle: -cog1AnimationController.value,
-                      child: FaIcon(
-                        FontAwesomeIcons.cog,
-                        size: 30,
-                        color: Colors.grey,
+                  Align(
+                    alignment: Alignment.bottomLeft,
+                    child: Container(
+                      margin: EdgeInsets.only(bottom: 10, left: 20),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.copyright,
+                            color: Colors.grey,
+                            size: 13,
+                          ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Text(
+                            'Anto App Solutions',
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
-                ),
-                Positioned(
-                  width: MediaQuery.of(context).size.width * 0.2,
-                  top: MediaQuery.of(context).size.width * 0.23,
-                  child: Container(
-                    alignment: Alignment.topCenter,
-                    margin: EdgeInsets.only(top: 10),
-                    child: Transform.rotate(
-                      alignment: Alignment.center,
-                      angle: -cog1AnimationController.value,
-                      child: FaIcon(
-                        FontAwesomeIcons.cog,
-                        size: 20,
-                        color: Colors.grey,
-                      ),
-                    ),
-                  ),
-                ),
-                Positioned(
-                  width: MediaQuery.of(context).size.width * 1.5,
-                  top: -MediaQuery.of(context).size.height * 0.02,
-                  child: Container(
-                    alignment: Alignment.topCenter,
-                    margin: EdgeInsets.only(top: 10),
-                    child: Transform.rotate(
-                      alignment: Alignment.center,
-                      angle: -(3.14 / 4),
+                  Positioned(
+                    width: MediaQuery.of(context).size.width * 0.3,
+                    top: MediaQuery.of(context).size.width * 0.1,
+                    child: Container(
+                      alignment: Alignment.topCenter,
+                      margin: EdgeInsets.only(top: 10),
                       child: Transform.rotate(
-                        angle: (3.14),
+                        alignment: Alignment.center,
+                        angle: cog1AnimationController.value,
                         child: FaIcon(
-                          FontAwesomeIcons.wrench,
-                          size: 55,
-                          color: Colors.white,
+                          FontAwesomeIcons.cog,
+                          size: 50,
+                          color: Colors.grey,
                         ),
                       ),
                     ),
                   ),
-                ),
-                Positioned(
-                  width: MediaQuery.of(context).size.width * 1.8,
-                  top: -MediaQuery.of(context).size.height * 0.06,
-                  child: Container(
-                    alignment: Alignment.topCenter,
-                    margin: EdgeInsets.only(top: 10),
-                    child: Transform.rotate(
-                      alignment: Alignment.bottomRight,
-                      angle: -(3.14 / 4),
+                  Positioned(
+                    width: MediaQuery.of(context).size.width * 0.4,
+                    top: MediaQuery.of(context).size.width * 0.23,
+                    child: Container(
+                      alignment: Alignment.topCenter,
+                      margin: EdgeInsets.only(top: 10),
                       child: Transform.rotate(
-                        angle: (3.14),
+                        alignment: Alignment.center,
+                        angle: -cog1AnimationController.value,
                         child: FaIcon(
-                          FontAwesomeIcons.screwdriver,
-                          size: 75,
-                          color: Colors.white,
+                          FontAwesomeIcons.cog,
+                          size: 30,
+                          color: Colors.grey,
                         ),
                       ),
                     ),
                   ),
-                ),
-                Positioned(
-                  width: MediaQuery.of(context).size.width * 2,
-                  top: MediaQuery.of(context).size.width * 0.9,
-                  child: Container(
-                    alignment: Alignment.topCenter,
-                    margin: EdgeInsets.only(top: 10),
-                    child: Transform.rotate(
-                      alignment: Alignment.center,
-                      angle: cogAnimationController.value,
-                      child: FaIcon(
-                        FontAwesomeIcons.cog,
-                        size: 100,
+                  Positioned(
+                    width: MediaQuery.of(context).size.width * 0.2,
+                    top: MediaQuery.of(context).size.width * 0.23,
+                    child: Container(
+                      alignment: Alignment.topCenter,
+                      margin: EdgeInsets.only(top: 10),
+                      child: Transform.rotate(
+                        alignment: Alignment.center,
+                        angle: -cog1AnimationController.value,
+                        child: FaIcon(
+                          FontAwesomeIcons.cog,
+                          size: 20,
+                          color: Colors.grey,
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                  Positioned(
+                    width: MediaQuery.of(context).size.width * 1.5,
+                    top: -MediaQuery.of(context).size.height * 0.02,
+                    child: Container(
+                      alignment: Alignment.topCenter,
+                      margin: EdgeInsets.only(top: 10),
+                      child: Transform.rotate(
+                        alignment: Alignment.center,
+                        angle: -(3.14 / 4),
+                        child: Transform.rotate(
+                          angle: (3.14),
+                          child: FaIcon(
+                            FontAwesomeIcons.wrench,
+                            size: 55,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    width: MediaQuery.of(context).size.width * 1.8,
+                    top: -MediaQuery.of(context).size.height * 0.06,
+                    child: Container(
+                      alignment: Alignment.topCenter,
+                      margin: EdgeInsets.only(top: 10),
+                      child: Transform.rotate(
+                        alignment: Alignment.bottomRight,
+                        angle: -(3.14 / 4),
+                        child: Transform.rotate(
+                          angle: (3.14),
+                          child: FaIcon(
+                            FontAwesomeIcons.screwdriver,
+                            size: 75,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    width: MediaQuery.of(context).size.width * 2,
+                    top: MediaQuery.of(context).size.width * 0.9,
+                    child: Container(
+                      alignment: Alignment.topCenter,
+                      margin: EdgeInsets.only(top: 10),
+                      child: Transform.rotate(
+                        alignment: Alignment.center,
+                        angle: cogAnimationController.value,
+                        child: FaIcon(
+                          FontAwesomeIcons.cog,
+                          size: 100,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -339,13 +322,29 @@ class CurvePainter extends CustomPainter {
 
     var path = Path();
 
-    path.moveTo(0, size.height * 0.4);
+    path.moveTo(
+      0,
+      size.height * 0.4,
+    );
     path.quadraticBezierTo(
-        size.width * 0.5, size.height * 0.5, size.width, size.height * 0.4);
-    path.lineTo(size.width, 0);
-    path.lineTo(0, 0);
+      size.width * 0.5,
+      size.height * 0.5,
+      size.width,
+      size.height * 0.4,
+    );
+    path.lineTo(
+      size.width,
+      0,
+    );
+    path.lineTo(
+      0,
+      0,
+    );
 
-    canvas.drawPath(path, paint);
+    canvas.drawPath(
+      path,
+      paint,
+    );
   }
 
   @override
@@ -363,21 +362,42 @@ class BottomCurvePainter extends CustomPainter {
           Color(0000212338),
           Color(0xFF112338),
         ],
-      ).createShader(Rect.fromCircle(
-        center: Offset(size.width / 2, size.height / 2),
-        radius: 500,
-      ));
+      ).createShader(
+        Rect.fromCircle(
+          center: Offset(
+            size.width / 2,
+            size.height / 2,
+          ),
+          radius: 500,
+        ),
+      );
     paint.style = PaintingStyle.fill;
 
     var path = Path();
 
-    path.moveTo(0, size.height * 0.2);
+    path.moveTo(
+      0,
+      size.height * 0.2,
+    );
     path.quadraticBezierTo(
-        size.width * 0.1, size.height * 0.6, size.width, size.height * 0.7);
-    path.lineTo(size.width, 0);
-    path.lineTo(0, 0);
+      size.width * 0.1,
+      size.height * 0.6,
+      size.width,
+      size.height * 0.7,
+    );
+    path.lineTo(
+      size.width,
+      0,
+    );
+    path.lineTo(
+      0,
+      0,
+    );
 
-    canvas.drawPath(path, paint);
+    canvas.drawPath(
+      path,
+      paint,
+    );
   }
 
   @override

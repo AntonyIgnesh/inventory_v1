@@ -277,9 +277,6 @@ class _ViewProductsScreenState extends State<ViewProductsScreen> {
                   );
                 },
               ),
-              // ViewProductsSizeList(
-              //   sizeList: sizesHorizontalList,
-              // ),
               Container(
                 height: 45,
                 width: MediaQuery.of(context).size.width,
@@ -375,13 +372,6 @@ class _ViewProductsScreenState extends State<ViewProductsScreen> {
                             kViewProductsSearchProductTextFieldDecoration,
                       ),
                     ),
-                    // IconButton(
-                    //   onPressed: () {},
-                    //   icon: Icon(
-                    //     Icons.filter_list,
-                    //     size: 35,
-                    //   ),
-                    // ),
                   ],
                 ),
               ),

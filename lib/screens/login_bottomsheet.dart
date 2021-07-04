@@ -3,12 +3,13 @@ import 'package:inventory_v1/constants.dart';
 import 'landing_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:inventory_v1/widgets/toast.dart';
 
 final _fireauth = FirebaseAuth.instance;
 TextEditingController userIdController = TextEditingController();
 bool loginFail = false;
 
-Widget showEditableUserIDField() {
+Widget showEditableUserIDField(bool alreadyLoggedIn) {
   return TextField(
     maxLines: 1,
     onChanged: (value) {
@@ -16,6 +17,7 @@ Widget showEditableUserIDField() {
     },
     style: kAddProductTextFieldStyle,
     keyboardType: TextInputType.emailAddress,
+    autofocus: alreadyLoggedIn == true ? false : true,
     decoration: InputDecoration(
       errorText: loginFail ? 'Please check the UserId' : null,
       errorBorder: kAddProductTextFieldErrorBorder,
@@ -28,7 +30,6 @@ Widget showEditableUserIDField() {
       focusedBorder: loginFail == false
           ? kAddProductTextFieldFocusedBorder
           : kAddProductTextFieldErrorBorder,
-      // enabledBorder: kAddProductTextFieldEnabledBorder,
     ),
   );
 }
@@ -79,10 +80,8 @@ class _LoginBottomsheetState extends State<LoginBottomsheet> {
           top: Radius.circular(25.0),
         ),
       ),
-      // height: MediaQuery.of(context).size.height * 0.5,
       padding: EdgeInsets.all(20.0),
       child: Container(
-        // height: MediaQuery.of(context).size.height * 0.5,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -94,7 +93,7 @@ class _LoginBottomsheetState extends State<LoginBottomsheet> {
               height: 15,
             ),
             widget.alreadyLoggedIn == false
-                ? showEditableUserIDField()
+                ? showEditableUserIDField(widget.alreadyLoggedIn)
                 : showNonEditableUserIDField(widget.emailId),
             SizedBox(
               height: 15,
@@ -107,6 +106,7 @@ class _LoginBottomsheetState extends State<LoginBottomsheet> {
               style: kAddProductTextFieldStyle,
               keyboardType: TextInputType.emailAddress,
               obscureText: true,
+              autofocus: widget.alreadyLoggedIn == true ? true : false,
               decoration: InputDecoration(
                 errorText: loginFail ? 'Please check the password' : null,
                 errorBorder: kAddProductTextFieldErrorBorder,
@@ -119,7 +119,6 @@ class _LoginBottomsheetState extends State<LoginBottomsheet> {
                 focusedBorder: loginFail == false
                     ? kAddProductTextFieldFocusedBorder
                     : kAddProductTextFieldErrorBorder,
-                // enabledBorder: kAddProductTextFieldEnabledBorder,
               ),
             ),
             SizedBox(
@@ -133,6 +132,9 @@ class _LoginBottomsheetState extends State<LoginBottomsheet> {
                 style: TextStyle(fontSize: 20),
               ),
               onPressed: () async {
+                ShowingToast(context: context).showLoginToast(
+                  "Logging in...",
+                );
                 try {
                   final loginUser = await _fireauth.signInWithEmailAndPassword(
                     email: widget.alreadyLoggedIn == true

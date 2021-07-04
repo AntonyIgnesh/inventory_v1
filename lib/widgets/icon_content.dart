@@ -16,8 +16,6 @@ class IconContent extends StatelessWidget {
       child: Center(
         child: SingleChildScrollView(
           child: Column(
-            // mainAxisAlignment: MainAxisAlignment.center,
-            // crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -33,7 +31,6 @@ class IconContent extends StatelessWidget {
                     iconData,
                     size: 80.0,
                     color: Colors.white,
-                    // Color(0xFF8D8E99),
                   ),
                 ],
               ),

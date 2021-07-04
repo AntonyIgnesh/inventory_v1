@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:inventory_v1/widgets/reusable_card.dart';
 import 'package:inventory_v1/constants.dart';
 import 'total_asset_screen.dart';
 import 'add_products_screen.dart';
 import 'package:inventory_v1/widgets/icon_content.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:inventory_v1/controller/firebase_networks.dart';
 import 'package:inventory_v1/widgets/sizes_dropdown.dart';
+
+final _fireauth = FirebaseAuth.instance;
 
 class LandingScreen extends StatefulWidget {
   final String id = '/landingScreen';
@@ -40,6 +43,100 @@ class _LandingScreenState extends State<LandingScreen> {
               'Mangal\'s Inventory',
             ),
             centerTitle: true,
+            actions: [
+              GestureDetector(
+                onTap: () async {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(32.0),
+                          ),
+                        ),
+                        backgroundColor: kCardColor,
+                        title: Text(
+                          'Confirm',
+                          style: TextStyle(fontSize: 20),
+                        ),
+                        contentPadding: EdgeInsets.only(top: 10.0),
+                        content: Container(
+                          height: MediaQuery.of(context).size.height * 0.2,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(left: 25),
+                                child: Text(
+                                  'Are you sure you wish to exit?',
+                                  style: TextStyle(
+                                    fontSize: 17,
+                                  ),
+                                ),
+                              ),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: InkWell(
+                                      onTap: () => Navigator.of(context).pop(),
+                                      child: Container(
+                                        padding: EdgeInsets.only(
+                                            top: 20.0, bottom: 20.0),
+                                        decoration: BoxDecoration(
+                                          color: Colors.red,
+                                          borderRadius: BorderRadius.only(
+                                            bottomLeft: Radius.circular(32.0),
+                                          ),
+                                        ),
+                                        child: Text(
+                                          'CANCEL',
+                                          style: TextStyle(color: Colors.white),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: InkWell(
+                                      onTap: () async {
+                                        setState(() => showLoading = true);
+                                        await _fireauth.signOut();
+                                        setState(() => showLoading = false);
+                                        SystemNavigator.pop();
+                                      },
+                                      child: Container(
+                                        padding: EdgeInsets.only(
+                                            top: 20.0, bottom: 20.0),
+                                        decoration: BoxDecoration(
+                                          color: Colors.green,
+                                          borderRadius: BorderRadius.only(
+                                              bottomRight:
+                                                  Radius.circular(32.0)),
+                                        ),
+                                        child: Text(
+                                          'EXIT',
+                                          style: TextStyle(color: Colors.white),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                },
+                child: Icon(
+                  Icons.logout_sharp,
+                ),
+              ),
+            ],
           ),
           body: Column(
             children: [

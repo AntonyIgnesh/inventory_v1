@@ -47,7 +47,6 @@ class AddProductsTextField extends StatelessWidget {
           contentPadding: EdgeInsets.all(10),
           border: kAddProductTextFieldBorder,
           focusedBorder: kAddProductTextFieldFocusedBorder,
-          // enabledBorder: kAddProductTextFieldEnabledBorder,
         ),
       ),
     );

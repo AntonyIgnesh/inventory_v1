@@ -33,9 +33,7 @@ class ProductDetailsScreen extends StatefulWidget {
 
 class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   TextEditingController productDescriptionController = TextEditingController();
-
   TextEditingController rateController = TextEditingController();
-
   TextEditingController sizeController = TextEditingController();
 
   showAlertDialog(BuildContext context, String prodId) async {
@@ -132,6 +130,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     productDescriptionController.text = widget.productDesc;
     rateController.text = widget.rate;
     sizeController.text = widget.size;
+
     productDescriptionController.selection = TextSelection.fromPosition(
       TextPosition(
         offset: productDescriptionController.text.length,
@@ -228,7 +227,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                               contentPadding: EdgeInsets.all(10),
                               border: kAddProductTextFieldBorder,
                               focusedBorder: kAddProductTextFieldFocusedBorder,
-                              // enabledBorder: kAddProductTextFieldEnabledBorder,
                             ),
                           ),
                         ],
@@ -292,7 +290,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                   border: kAddProductTextFieldBorder,
                                   focusedBorder:
                                       kAddProductTextFieldFocusedBorder,
-                                  // enabledBorder: kAddProductTextFieldEnabledBorder,
                                 ),
                               ),
                             ),
@@ -320,7 +317,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                     'SELL',
                                     style: TextStyle(
                                       color: kCardColor,
-                                      // fontWeight: FontWeight.w800,
                                     ),
                                   ),
                                 ),
@@ -354,9 +350,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                 widget.productAddYear,
                               );
                               setState(() => widget.showLoading = false);
-                              // print(widget.productDesc +
-                              //     widget.size +
-                              //     widget.rate);
                             },
                             child: Row(
                               children: [
@@ -372,7 +365,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                     'UPDATE',
                                     style: TextStyle(
                                       color: kCardColor,
-                                      // fontWeight: FontWeight.w800,
                                     ),
                                   ),
                                 ),

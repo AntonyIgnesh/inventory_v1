@@ -17,20 +17,6 @@ Future getSizesFromFireBase() async {
   try {
     sizeFromFireStore =
         await _fireStore.collection("productSizes").doc("sizes").get();
-    // if (sizeFromFireStore != null) {
-    //   for (String sizeForList in sizeFromFireStore.data().values) {
-    //     var newItem = DropdownMenuItem(
-    //       child: Text(
-    //         sizeForList,
-    //         style: kAddProductSizesStyle,
-    //       ),
-    //       value: sizeForList,
-    //     );
-    //     sizeListFromFireStore.add(newItem);
-    //   }
-    // } else {
-    //   print('Nothing fetched');
-    // }
   } catch (e) {
     print(e);
     print('Error in Getting Sizes from Firebase');

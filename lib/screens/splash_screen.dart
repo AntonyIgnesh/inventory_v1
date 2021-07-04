@@ -25,36 +25,39 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Center(
-          child: CircleAvatar(
-            backgroundColor: Colors.red,
-            radius: 104,
-          ),
-        ),
-        Center(
-          child: CircleAvatar(
-            child: Text(
-              'LMNS',
-              style: TextStyle(
-                color: Colors.red,
-                fontSize: 55,
-                fontWeight: FontWeight.bold,
-              ),
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: Stack(
+        children: [
+          Center(
+            child: CircleAvatar(
+              backgroundColor: Colors.red,
+              radius: 104,
             ),
-            backgroundColor: Colors.white,
-            radius: 100,
           ),
-        ),
-        Container(
-          margin: EdgeInsets.only(bottom: 50),
-          alignment: Alignment.bottomCenter,
-          child: CircularProgressIndicator(
-            color: Colors.red,
+          Center(
+            child: CircleAvatar(
+              child: Text(
+                'LMNS',
+                style: TextStyle(
+                  color: Colors.red,
+                  fontSize: 55,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              backgroundColor: Colors.white,
+              radius: 100,
+            ),
           ),
-        ),
-      ],
+          Container(
+            margin: EdgeInsets.only(bottom: 50),
+            alignment: Alignment.bottomCenter,
+            child: CircularProgressIndicator(
+              color: Colors.red,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

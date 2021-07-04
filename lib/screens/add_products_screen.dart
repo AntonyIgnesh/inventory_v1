@@ -36,7 +36,6 @@ class _AddProductsScreenState extends State<AddProductsScreen> {
         offset: productDescriptionController.text.length,
       ),
     );
-    // height: MediaQuery.of(context).size.height * 0.75,
     return ModalProgressHUD(
       inAsyncCall: showLoading,
       child: Container(
@@ -46,15 +45,11 @@ class _AddProductsScreenState extends State<AddProductsScreen> {
             top: Radius.circular(25.0),
           ),
         ),
-        // constraints: BoxConstraints(
-        //   maxHeight: MediaQuery.of(context).size.height * 0.5,
-        // ),
         height: MediaQuery.of(context).size.height * 0.5,
         padding: EdgeInsets.all(20.0),
         child: Container(
           height: MediaQuery.of(context).size.height * 0.5,
           child: Column(
-            // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Text(
                 'Add Product',
@@ -63,7 +58,6 @@ class _AddProductsScreenState extends State<AddProductsScreen> {
               Expanded(
                 flex: 2,
                 child: Row(
-                  // crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -75,9 +69,6 @@ class _AddProductsScreenState extends State<AddProductsScreen> {
                             lableTextForTextField: 'Product ID',
                             controller: productIdController,
                             editable: false,
-                            // onChangeFunction: (value) {
-                            //   productIdController.text = value;
-                            // },
                           ),
                         ),
                         SizedBox(
