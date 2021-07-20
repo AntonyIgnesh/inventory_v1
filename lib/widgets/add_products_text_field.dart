@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:inventory_v1/constants.dart';
 
 class AddProductsTextField extends StatelessWidget {
@@ -10,6 +11,8 @@ class AddProductsTextField extends StatelessWidget {
   final bool editable;
   final bool obscureText;
   final String errorText;
+  final List<TextInputFormatter> inputFormat;
+
   AddProductsTextField({
     this.lableTextForTextField,
     this.onChangeFunction,
@@ -19,6 +22,7 @@ class AddProductsTextField extends StatelessWidget {
     this.editable = true,
     this.obscureText = false,
     this.errorText,
+    this.inputFormat,
   });
 
   @override
@@ -37,6 +41,7 @@ class AddProductsTextField extends StatelessWidget {
         controller: controller,
         keyboardType: textInputType,
         obscureText: obscureText,
+        inputFormatters: inputFormat,
         decoration: InputDecoration(
           errorText: errorText,
           errorBorder: kAddProductTextFieldErrorBorder,

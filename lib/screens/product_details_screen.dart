@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:inventory_v1/constants.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:inventory_v1/controller/firebase_networks.dart';
@@ -220,6 +221,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                               fontSize: 17,
                               color: Colors.black,
                             ),
+                            inputFormatters: [
+                              LengthLimitingTextInputFormatter(500),
+                            ],
                             decoration: InputDecoration(
                               filled: true,
                               fillColor: Color(0xFFE2E3E3),
@@ -281,6 +285,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                   fontSize: 17,
                                   color: Colors.black,
                                 ),
+                                inputFormatters: [
+                                  LengthLimitingTextInputFormatter(6),
+                                  FilteringTextInputFormatter.digitsOnly,
+                                ],
                                 keyboardType: TextInputType.number,
                                 decoration: InputDecoration(
                                   filled: true,

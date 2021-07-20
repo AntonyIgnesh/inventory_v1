@@ -99,17 +99,19 @@ class _LoginScreenState extends State<LoginScreen>
                     ),
                   ),
                   Center(
-                    child: CircleAvatar(
+                    child: Container(
+                      width: 220,
+                      color: Colors.white,
                       child: Text(
                         'LMNS',
+                        textAlign: TextAlign.center,
                         style: TextStyle(
+                          letterSpacing: 10,
                           color: Colors.red,
-                          fontSize: 55,
+                          fontSize: 59,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      backgroundColor: Colors.white,
-                      radius: 100,
                     ),
                   ),
                   Align(

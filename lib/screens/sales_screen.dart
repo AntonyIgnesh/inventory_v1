@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:inventory_v1/widgets/products_card.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class UpdateProductsScreen extends StatelessWidget {
+class SalesScreen extends StatelessWidget {
+  final String id = '/updateProductsScreen';
+  final ProductsCard productsCard;
+
+  SalesScreen({this.productsCard});
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -15,11 +21,17 @@ class UpdateProductsScreen extends StatelessWidget {
               Navigator.of(context).pop();
             },
           ),
-          title: Text('Update Products'),
+          title: Text('Sales'),
           centerTitle: true,
         ),
-        body: Center(
-          child: Text('Update Page'),
+        body: Column(
+          children: [
+            Text('Bill No: ' + productsCard.productId),
+            MaterialButton(
+              color: Colors.deepPurpleAccent,
+              onPressed: () {},
+            ),
+          ],
         ),
       ),
     );

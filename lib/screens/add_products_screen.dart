@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:inventory_v1/constants.dart';
 import 'package:inventory_v1/widgets/add_products_text_field.dart';
@@ -77,6 +78,9 @@ class _AddProductsScreenState extends State<AddProductsScreen> {
                             lableTextForTextField: 'Description',
                             textInputType: TextInputType.multiline,
                             maxLines: 4,
+                            inputFormat: [
+                              LengthLimitingTextInputFormatter(10),
+                            ],
                             onChangeFunction: (value) {
                               productDescriptionController.text = value;
                             },
@@ -147,6 +151,13 @@ class _AddProductsScreenState extends State<AddProductsScreen> {
                                 width: 100,
                                 child: AddProductsTextField(
                                   lableTextForTextField: 'Rate',
+                                  inputFormat: [
+                                    LengthLimitingTextInputFormatter(6),
+                                    FilteringTextInputFormatter.digitsOnly,
+                                    // FilteringTextInputFormatter.allow(
+                                    //   RegExp('[0-9]{5}\.[0-9]{2}'),
+                                    // )
+                                  ],
                                   onChangeFunction: (value) {
                                     setState(() {
                                       rate = int.parse(value);

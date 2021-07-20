@@ -3,7 +3,7 @@ import 'package:inventory_v1/screens/login_screen.dart';
 import 'screens/landing_screen.dart';
 import 'screens/view_products_screen.dart';
 import 'screens/add_products_screen.dart';
-import 'screens/update_products_screen.dart';
+import 'screens/sales_screen.dart';
 import 'screens/splash_screen.dart';
 
 void main() => runApp(MyApp());
@@ -12,8 +12,6 @@ class MyApp extends StatefulWidget {
   @override
   _MyAppState createState() => _MyAppState();
 }
-
-void getInitLoginPrefs() async {}
 
 class _MyAppState extends State<MyApp> {
   @override
@@ -33,7 +31,7 @@ class _MyAppState extends State<MyApp> {
         SplashScreen().id: (context) => SplashScreen(),
         LoginScreen().id: (context) => LoginScreen(),
         LandingScreen().id: (context) => LandingScreen(),
-        '/updateProductsScreen': (context) => UpdateProductsScreen(),
+        SalesScreen().id: (context) => SalesScreen(),
         ViewProductsScreen().id: (context) => ViewProductsScreen(),
         AddProductsScreen().id: (context) => AddProductsScreen(),
       },

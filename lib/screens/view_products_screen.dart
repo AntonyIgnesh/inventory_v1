@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:inventory_v1/constants.dart';
+import 'package:inventory_v1/screens/sales_screen.dart';
 import 'package:inventory_v1/widgets/products_card.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:inventory_v1/controller/firebase_networks.dart';
@@ -118,101 +119,126 @@ class _ViewProductsScreenState extends State<ViewProductsScreen> {
                       productsListedBelow += 1;
                       final productCardWidget = Dismissible(
                         confirmDismiss: (direction) async {
-                          return await showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(32.0),
-                                  ),
-                                ),
-                                backgroundColor: kCardColor,
-                                title: Text(
-                                  'Confirm',
-                                  style: TextStyle(fontSize: 20),
-                                ),
-                                contentPadding: EdgeInsets.only(top: 10.0),
-                                content: Container(
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.2,
-                                  child: Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.stretch,
-                                    children: [
-                                      Padding(
-                                        padding:
-                                            const EdgeInsets.only(left: 25),
-                                        child: Text(
-                                          'Are you sure you wish to delete $productId Product?',
-                                          style: TextStyle(
-                                            fontSize: 17,
-                                          ),
+                          switch (direction) {
+                            case DismissDirection.endToStart:
+                              {
+                                return await showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(32.0),
                                         ),
                                       ),
-                                      Row(
-                                        children: [
-                                          Expanded(
-                                            child: InkWell(
-                                              onTap: () => Navigator.of(context)
-                                                  .pop(false),
-                                              child: Container(
-                                                padding: EdgeInsets.only(
-                                                    top: 20.0, bottom: 20.0),
-                                                decoration: BoxDecoration(
-                                                  color: Colors.red,
-                                                  borderRadius:
-                                                      BorderRadius.only(
-                                                    bottomLeft:
-                                                        Radius.circular(32.0),
+                                      backgroundColor: kCardColor,
+                                      title: Text(
+                                        'Confirm',
+                                        style: TextStyle(fontSize: 20),
+                                      ),
+                                      contentPadding:
+                                          EdgeInsets.only(top: 10.0),
+                                      content: Container(
+                                        height:
+                                            MediaQuery.of(context).size.height *
+                                                0.2,
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.stretch,
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 25),
+                                              child: Text(
+                                                'Are you sure you wish to delete $productId Product?',
+                                                style: TextStyle(
+                                                  fontSize: 17,
+                                                ),
+                                              ),
+                                            ),
+                                            Row(
+                                              children: [
+                                                Expanded(
+                                                  child: InkWell(
+                                                    onTap: () =>
+                                                        Navigator.of(context)
+                                                            .pop(false),
+                                                    child: Container(
+                                                      padding: EdgeInsets.only(
+                                                          top: 20.0,
+                                                          bottom: 20.0),
+                                                      decoration: BoxDecoration(
+                                                        color: Colors.red,
+                                                        borderRadius:
+                                                            BorderRadius.only(
+                                                          bottomLeft:
+                                                              Radius.circular(
+                                                                  32.0),
+                                                        ),
+                                                      ),
+                                                      child: Text(
+                                                        'CANCEL',
+                                                        style: TextStyle(
+                                                            color:
+                                                                Colors.white),
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                      ),
+                                                    ),
                                                   ),
                                                 ),
-                                                child: Text(
-                                                  'CANCEL',
-                                                  style: TextStyle(
-                                                      color: Colors.white),
-                                                  textAlign: TextAlign.center,
+                                                Expanded(
+                                                  child: InkWell(
+                                                    onTap: () =>
+                                                        Navigator.of(context)
+                                                            .pop(true),
+                                                    child: Container(
+                                                      padding: EdgeInsets.only(
+                                                          top: 20.0,
+                                                          bottom: 20.0),
+                                                      decoration: BoxDecoration(
+                                                        color: Colors.green,
+                                                        borderRadius:
+                                                            BorderRadius.only(
+                                                                bottomRight: Radius
+                                                                    .circular(
+                                                                        32.0)),
+                                                      ),
+                                                      child: Text(
+                                                        'DELETE',
+                                                        style: TextStyle(
+                                                            color:
+                                                                Colors.white),
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                      ),
+                                                    ),
+                                                  ),
                                                 ),
-                                              ),
-                                            ),
-                                          ),
-                                          Expanded(
-                                            child: InkWell(
-                                              onTap: () => Navigator.of(context)
-                                                  .pop(true),
-                                              child: Container(
-                                                padding: EdgeInsets.only(
-                                                    top: 20.0, bottom: 20.0),
-                                                decoration: BoxDecoration(
-                                                  color: Colors.green,
-                                                  borderRadius:
-                                                      BorderRadius.only(
-                                                          bottomRight:
-                                                              Radius.circular(
-                                                                  32.0)),
-                                                ),
-                                                child: Text(
-                                                  'DELETE',
-                                                  style: TextStyle(
-                                                      color: Colors.white),
-                                                  textAlign: TextAlign.center,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              );
-                            },
-                          );
+                                              ],
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                );
+                              }
+                              break;
+                            case DismissDirection.startToEnd:
+                              {
+                                Navigator.pushReplacementNamed(
+                                  context,
+                                  SalesScreen().id,
+                                );
+                              }
+                              break;
+                          }
+                          return false;
                         },
-                        direction: DismissDirection.endToStart,
-                        background: Row(
+                        secondaryBackground: Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             Text(
@@ -226,7 +252,24 @@ class _ViewProductsScreenState extends State<ViewProductsScreen> {
                             Icon(
                               Icons.delete_forever,
                               size: 35,
-                            )
+                            ),
+                          ],
+                        ),
+                        background: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Icon(
+                              FontAwesomeIcons.rupeeSign,
+                              size: 23,
+                            ),
+                            Text(
+                              'SELL',
+                              style: TextStyle(
+                                color: Colors.green,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20,
+                              ),
+                            ),
                           ],
                         ),
                         key: Key(product.id),

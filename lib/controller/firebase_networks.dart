@@ -103,8 +103,7 @@ Future generateProductID() async {
 Future addProduct(BuildContext context, String productId, String productDesc,
     String size, String rate) async {
   try {
-    if (productDesc.isNotEmpty) {
-      // setState(() => showLoading = true);
+    if (productDesc.isNotEmpty && (int.parse(rate) != 0)) {
       await _fireStore.collection('products').doc(finalProductDocumentId).set(
         {
           'ProductId': productId,
@@ -117,14 +116,19 @@ Future addProduct(BuildContext context, String productId, String productDesc,
           'Timestamp': DateTime.now(),
         },
       );
-      // setState(() => showLoading = false);
       ShowingToast(context: context)
           .showSuccessToast("Product " + productId + " added Successfully");
       Navigator.pop(context);
-    } else if (productDesc.isEmpty) {
-      ShowingToast(context: context).showFailureToast(
-        "Description can\'t be empty",
-      );
+    } else {
+      if (productDesc.isEmpty) {
+        ShowingToast(context: context).showFailureToast(
+          "Description can\'t be empty",
+        );
+      } else if (int.parse(rate) == 0) {
+        ShowingToast(context: context).showFailureToast(
+          "Rate can\'t be 0",
+        );
+      }
     }
   } catch (e) {
     ShowingToast(context: context).showFailureToast(
@@ -169,7 +173,7 @@ Future updateProductWithProductID(
   String addYear,
 ) async {
   try {
-    if (productDesc.isNotEmpty && rate.isNotEmpty) {
+    if (productDesc.isNotEmpty && rate.isNotEmpty && (int.parse(rate) != 0)) {
       await _fireStore
           .collection('products')
           .where(
@@ -207,6 +211,10 @@ Future updateProductWithProductID(
       } else if (rate.isEmpty) {
         ShowingToast(context: context).showFailureToast(
           'Rate is Mandatory',
+        );
+      } else if (int.parse(rate) == 0) {
+        ShowingToast(context: context).showFailureToast(
+          'Rate can\'t be 0',
         );
       }
     }
