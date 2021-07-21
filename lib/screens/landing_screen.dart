@@ -132,8 +132,11 @@ class _LandingScreenState extends State<LandingScreen> {
                     },
                   );
                 },
-                child: Icon(
-                  Icons.logout_sharp,
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 10.0),
+                  child: Icon(
+                    Icons.logout_sharp,
+                  ),
                 ),
               ),
             ],

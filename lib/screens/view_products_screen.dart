@@ -229,10 +229,12 @@ class _ViewProductsScreenState extends State<ViewProductsScreen> {
                               break;
                             case DismissDirection.startToEnd:
                               {
-                                Navigator.pushReplacementNamed(
-                                  context,
-                                  SalesScreen().id,
+                                Route route = MaterialPageRoute(
+                                  builder: (context) => SalesScreen(
+                                    productId: productId,
+                                  ),
                                 );
+                                Navigator.pushReplacement(context, route);
                               }
                               break;
                           }

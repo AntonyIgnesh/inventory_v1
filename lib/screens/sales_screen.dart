@@ -3,10 +3,12 @@ import 'package:inventory_v1/widgets/products_card.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class SalesScreen extends StatelessWidget {
-  final String id = '/updateProductsScreen';
-  final ProductsCard productsCard;
+  final String id = '/SalesScreen';
+  final String productId;
 
-  SalesScreen({this.productsCard});
+  SalesScreen({
+    this.productId,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +28,7 @@ class SalesScreen extends StatelessWidget {
         ),
         body: Column(
           children: [
-            Text('Bill No: ' + productsCard.productId),
+            Text('Bill No: ' + productId),
             MaterialButton(
               color: Colors.deepPurpleAccent,
               onPressed: () {},

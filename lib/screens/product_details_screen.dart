@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:inventory_v1/constants.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:inventory_v1/controller/firebase_networks.dart';
+import 'package:inventory_v1/screens/sales_screen.dart';
 import 'package:inventory_v1/widgets/sizes_dropdown.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:inventory_v1/widgets/toast.dart';
@@ -310,7 +311,14 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                       children: [
                         Expanded(
                           child: MaterialButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Route route = MaterialPageRoute(
+                                builder: (context) => SalesScreen(
+                                  productId: widget.productId,
+                                ),
+                              );
+                              Navigator.pushReplacement(context, route);
+                            },
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
