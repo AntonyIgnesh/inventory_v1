@@ -2,7 +2,7 @@
     package="com.antonyignatiusthenrajaf.inventory_v1">
    <application
         android:label="inventory_v1"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/lmns_logo">
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"

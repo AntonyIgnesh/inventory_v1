@@ -36,18 +36,25 @@ class _SplashScreenState extends State<SplashScreen> {
             ),
           ),
           Center(
-            child: CircleAvatar(
-              child: Text(
-                'LMNS',
-                style: TextStyle(
-                  color: Colors.red,
-                  fontSize: 55,
-                  fontWeight: FontWeight.bold,
-                ),
+            child: Center(
+              child: Image(
+                image: AssetImage('images/Logo.PNG'),
+                width: 280,
+                height: 280,
               ),
-              backgroundColor: Colors.white,
-              radius: 100,
             ),
+            // CircleAvatar(
+            //   child: Text(
+            //     'LMNS',
+            //     style: TextStyle(
+            //       color: Colors.red,
+            //       fontSize: 55,
+            //       fontWeight: FontWeight.bold,
+            //     ),
+            //   ),
+            //   backgroundColor: Colors.white,
+            //   radius: 100,
+            // ),
           ),
           Container(
             margin: EdgeInsets.only(bottom: 50),

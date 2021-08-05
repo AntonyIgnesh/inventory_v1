@@ -87,33 +87,40 @@ class _LoginScreenState extends State<LoginScreen>
               child: Stack(
                 children: [
                   Center(
-                    child: CircleAvatar(
-                      backgroundColor: Colors.white,
-                      radius: 110,
+                    child: Image(
+                      image: AssetImage('images/Logo.PNG'),
+                      width: 280,
+                      height: 280,
                     ),
                   ),
-                  Center(
-                    child: CircleAvatar(
-                      backgroundColor: Colors.red,
-                      radius: 104,
-                    ),
-                  ),
-                  Center(
-                    child: Container(
-                      width: 220,
-                      color: Colors.white,
-                      child: Text(
-                        'LMNS',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          letterSpacing: 10,
-                          color: Colors.red,
-                          fontSize: 59,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ),
+                  // Center(
+                  //   child: CircleAvatar(
+                  //     backgroundColor: Colors.white,
+                  //     radius: 110,
+                  //   ),
+                  // ),
+                  // Center(
+                  //   child: CircleAvatar(
+                  //     backgroundColor: Colors.red,
+                  //     radius: 104,
+                  //   ),
+                  // ),
+                  // Center(
+                  //   child: Container(
+                  //     width: 220,
+                  //     color: Colors.white,
+                  //     child: Text(
+                  //       'LMNS',
+                  //       textAlign: TextAlign.center,
+                  //       style: TextStyle(
+                  //         letterSpacing: 10,
+                  //         color: Colors.red,
+                  //         fontSize: 59,
+                  //         fontWeight: FontWeight.bold,
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
                   Align(
                     alignment: Alignment.bottomCenter,
                     child: Container(

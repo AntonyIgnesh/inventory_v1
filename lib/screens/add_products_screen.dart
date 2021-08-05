@@ -79,7 +79,7 @@ class _AddProductsScreenState extends State<AddProductsScreen> {
                             textInputType: TextInputType.multiline,
                             maxLines: 4,
                             inputFormat: [
-                              LengthLimitingTextInputFormatter(10),
+                              LengthLimitingTextInputFormatter(500),
                             ],
                             onChangeFunction: (value) {
                               productDescriptionController.text = value;

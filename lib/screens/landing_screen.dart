@@ -12,6 +12,7 @@ import 'package:inventory_v1/controller/firebase_networks.dart';
 import 'package:inventory_v1/widgets/sizes_dropdown.dart';
 
 final _fireauth = FirebaseAuth.instance;
+List<String> productsChosenForSale = [];
 
 class LandingScreen extends StatefulWidget {
   final String id = '/landingScreen';

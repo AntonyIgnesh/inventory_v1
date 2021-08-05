@@ -232,6 +232,8 @@ class _ViewProductsScreenState extends State<ViewProductsScreen> {
                                 Route route = MaterialPageRoute(
                                   builder: (context) => SalesScreen(
                                     productId: productId,
+                                    productDesc: productDesc,
+                                    rate: rate,
                                   ),
                                 );
                                 Navigator.pushReplacement(context, route);
