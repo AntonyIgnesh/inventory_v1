@@ -229,6 +229,8 @@ class _ViewProductsScreenState extends State<ViewProductsScreen> {
                               break;
                             case DismissDirection.startToEnd:
                               {
+                                await generateSalesDocumentID();
+                                await generateBillNumber();
                                 Route route = MaterialPageRoute(
                                   builder: (context) => SalesScreen(
                                     productId: productId,

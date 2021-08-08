@@ -6,7 +6,9 @@ import 'package:inventory_v1/widgets/toast.dart';
 final _fireStore = FirebaseFirestore.instance;
 List<DropdownMenuItem<String>> sizeListFromFireStore = [];
 String finalProductDocumentId;
+String finalSalesDocumentId;
 String finalNewProductId;
+String finalNewBillNumber;
 String todayDate;
 String todayMonth;
 String todayYear;
@@ -50,6 +52,69 @@ Future generateDocumentID() async {
   }
 
   print(finalProductDocumentId);
+}
+
+Future generateSalesDocumentID() async {
+  List<DocumentSnapshot> documents;
+  List<String> salesDocumentIdList = [];
+  int lastAddedSalesDocumentId;
+  int newSalesDocumentId;
+
+  var documentsFromFireStore = await _fireStore.collection("sales").get();
+
+  if (documentsFromFireStore != null) {
+    documents = documentsFromFireStore.docs;
+    if (documents.isNotEmpty) {
+      documents.forEach((data) {
+        salesDocumentIdList.add(data.id);
+      });
+      salesDocumentIdList.sort();
+      lastAddedSalesDocumentId =
+          int.parse(salesDocumentIdList.last.substring(5));
+      newSalesDocumentId = lastAddedSalesDocumentId + 1;
+
+      finalSalesDocumentId =
+          'Product${newSalesDocumentId.toString().padLeft(10, '0')}';
+    } else {
+      finalSalesDocumentId = 'Sales0000000001';
+    }
+  }
+
+  print(finalSalesDocumentId);
+}
+
+Future generateBillNumber() async {
+  List<String> billNumberFromFireStore = [];
+  DateTime dateUnformatted = DateTime.now();
+  DateFormat dateFormatted = DateFormat('dd-MMM-yy');
+  String fullDateNeeded = dateFormatted.format(dateUnformatted);
+
+  var documentsFromFireStore = await _fireStore.collection("sales").get();
+
+  if (documentsFromFireStore != null) {
+    List<DocumentSnapshot> salesList = documentsFromFireStore.docs;
+
+    if (salesList.isNotEmpty) {
+      salesList.forEach(
+        (receivedRecords) {
+          billNumberFromFireStore.add(receivedRecords.get('BillNumber'));
+        },
+      );
+
+      billNumberFromFireStore.sort();
+
+      String lastAddedBillNumber = billNumberFromFireStore.last;
+      String lastAddedBillNumberDigitsOnly = lastAddedBillNumber.substring(4);
+      int lastAddedBillNumberDigitsOnlyInt =
+          int.parse(lastAddedBillNumberDigitsOnly);
+      int newProductIdInt = lastAddedBillNumberDigitsOnlyInt + 1;
+
+      finalNewBillNumber = 'LMNS${newProductIdInt.toString().padLeft(10, '0')}';
+    } else {
+      finalNewBillNumber = 'LMNS0000000001';
+    }
+    print(finalNewBillNumber);
+  }
 }
 
 Future generateProductID() async {

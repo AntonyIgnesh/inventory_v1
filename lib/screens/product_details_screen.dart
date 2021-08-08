@@ -311,10 +311,16 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                       children: [
                         Expanded(
                           child: MaterialButton(
-                            onPressed: () {
+                            onPressed: () async {
+                              setState(() => widget.showLoading = true);
+                              await generateSalesDocumentID();
+                              await generateBillNumber();
+                              setState(() => widget.showLoading = false);
                               Route route = MaterialPageRoute(
                                 builder: (context) => SalesScreen(
                                   productId: widget.productId,
+                                  productDesc: widget.productDesc,
+                                  rate: widget.rate,
                                 ),
                               );
                               Navigator.pushReplacement(context, route);
