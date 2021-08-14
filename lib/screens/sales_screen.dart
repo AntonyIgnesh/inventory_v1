@@ -5,13 +5,13 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:inventory_v1/constants.dart';
 import 'checkout_screen.dart';
 import 'package:inventory_v1/widgets/toast.dart';
+import 'list_products_for_sale_screen.dart';
 
-class SalesScreen extends StatelessWidget {
+class SalesScreen extends StatefulWidget {
   final String id = '/SalesScreen';
   final String productId;
   final String productDesc;
   final String rate;
-  double totalPrice = 0.0;
 
   SalesScreen({
     this.productId,
@@ -20,20 +20,28 @@ class SalesScreen extends StatelessWidget {
   });
 
   @override
+  _SalesScreenState createState() => _SalesScreenState();
+}
+
+class _SalesScreenState extends State<SalesScreen> {
+  double totalPrice = 0.0;
+
+  @override
   Widget build(BuildContext context) {
-    if (productId != null) {
-      productsChosenForSale.add(productId);
+    if (widget.productId != null &&
+        !(productsChosenForSale.contains(widget.productId))) {
+      productsChosenForSale.add(widget.productId);
+      productRatesChosenForSale.add(widget.rate);
+      totalPrice = totalPrice + double.parse(widget.rate);
     }
-    if (rate != null) {
-      productRatesChosenForSale.add(rate);
-      if (productRatesChosenForSale.length > 1) {
-        for (String rateInList in productRatesChosenForSale) {
-          totalPrice = totalPrice + double.parse(rateInList);
-        }
-      } else {
-        totalPrice = double.parse(productRatesChosenForSale[0]);
-      }
-    }
+    // if (productRatesChosenForSale.length >= 1) {
+    //   for (String rateInList in productRatesChosenForSale) {
+    //     totalPrice = totalPrice + double.parse(rateInList);
+    //   }
+    // }
+    // else if (productRatesChosenForSale.length == 1) {
+    //   totalPrice = double.parse(productRatesChosenForSale[0]);
+    // }
 
     return WillPopScope(
       onWillPop: () async {
@@ -77,7 +85,7 @@ class SalesScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              productId != null
+              productsChosenForSale.length != 0
                   ? Expanded(
                       child: Container(
                         child: ListView.builder(
@@ -129,7 +137,10 @@ class SalesScreen extends StatelessWidget {
                       child: Text(''),
                     ),
               IconButton(
-                onPressed: () {},
+                onPressed: () async {
+                  await generateProductListForSale();
+                  Navigator.pushNamed(context, ListProductsForSaleScreen().id);
+                },
                 icon: Icon(
                   Icons.add_circle_outline,
                   size: 35,
@@ -147,7 +158,7 @@ class SalesScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      productId != null
+                      productsChosenForSale.length != 0
                           ? 'Quantity : ${productsChosenForSale.length}'
                           : 'Quantity : 0',
                       style: TextStyle(
@@ -191,7 +202,8 @@ class SalesScreen extends StatelessWidget {
                           totalPrice: totalPrice,
                         ),
                       );
-                      Navigator.push(context, route);
+                      Navigator.push(context, route)
+                          .then((_) => setState(() {}));
                     } else {
                       ShowingToast(context: context).showFailureToast(
                         'No products added to sell',

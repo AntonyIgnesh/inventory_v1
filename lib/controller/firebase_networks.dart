@@ -5,6 +5,7 @@ import 'package:inventory_v1/widgets/toast.dart';
 
 final _fireStore = FirebaseFirestore.instance;
 List<DropdownMenuItem<String>> sizeListFromFireStore = [];
+List<Map<String, String>> productsListFromFireStore = [];
 String finalProductDocumentId;
 String finalSalesDocumentId;
 String finalNewProductId;
@@ -162,6 +163,29 @@ Future generateProductID() async {
       finalNewProductId = todayMonth.toUpperCase() + todayYear + '-00001';
     }
     print(finalNewProductId);
+  }
+}
+
+Future generateProductListForSale() async {
+  productsListFromFireStore.clear();
+  var documentsFromFireStore = await _fireStore.collection("products").get();
+
+  if (documentsFromFireStore != null) {
+    List<DocumentSnapshot> snapshotList = documentsFromFireStore.docs;
+
+    if (snapshotList.isNotEmpty) {
+      snapshotList.forEach(
+        (receivedRecords) {
+          productsListFromFireStore.add(
+            {
+              'ProductID': receivedRecords.get('ProductId'),
+              'ProductDesc': receivedRecords.get('ProductDescription'),
+              'Rate': receivedRecords.get('Rate'),
+            },
+          );
+        },
+      );
+    }
   }
 }
 
