@@ -218,7 +218,7 @@ class _ListProductsForSaleScreenState extends State<ListProductsForSaleScreen> {
                     for (String rates in productRatesChosenWhileListing) {
                       productRatesChosenForSale.add(rates);
                     }
-                    Navigator.pop(context, setState(() {}));
+                    Navigator.pop(context);
                     productsChosenWhileListing.clear();
                     productRatesChosenWhileListing.clear();
                   },

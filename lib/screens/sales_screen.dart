@@ -24,24 +24,18 @@ class SalesScreen extends StatefulWidget {
 }
 
 class _SalesScreenState extends State<SalesScreen> {
-  double totalPrice = 0.0;
-
   @override
   Widget build(BuildContext context) {
+    double totalPrice = 0.0;
     if (widget.productId != null &&
         !(productsChosenForSale.contains(widget.productId))) {
       productsChosenForSale.add(widget.productId);
       productRatesChosenForSale.add(widget.rate);
-      totalPrice = totalPrice + double.parse(widget.rate);
     }
-    // if (productRatesChosenForSale.length >= 1) {
-    //   for (String rateInList in productRatesChosenForSale) {
-    //     totalPrice = totalPrice + double.parse(rateInList);
-    //   }
-    // }
-    // else if (productRatesChosenForSale.length == 1) {
-    //   totalPrice = double.parse(productRatesChosenForSale[0]);
-    // }
+
+    for (String rateInList in productRatesChosenForSale) {
+      totalPrice = totalPrice + double.parse(rateInList);
+    }
 
     return WillPopScope(
       onWillPop: () async {
@@ -139,7 +133,8 @@ class _SalesScreenState extends State<SalesScreen> {
               IconButton(
                 onPressed: () async {
                   await generateProductListForSale();
-                  Navigator.pushNamed(context, ListProductsForSaleScreen().id);
+                  Navigator.pushNamed(context, ListProductsForSaleScreen().id)
+                      .then((_) => setState(() {}));
                 },
                 icon: Icon(
                   Icons.add_circle_outline,
@@ -165,11 +160,25 @@ class _SalesScreenState extends State<SalesScreen> {
                         fontSize: 18,
                       ),
                     ),
-                    Text(
-                      'Total Price : $totalPrice',
-                      style: TextStyle(
-                        fontSize: 18,
-                      ),
+                    Row(
+                      children: [
+                        Text(
+                          'Total Price : ',
+                          style: TextStyle(
+                            fontSize: 18,
+                          ),
+                        ),
+                        Icon(
+                          FontAwesomeIcons.rupeeSign,
+                          size: 14,
+                        ),
+                        Text(
+                          '$totalPrice',
+                          style: TextStyle(
+                            fontSize: 18,
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),

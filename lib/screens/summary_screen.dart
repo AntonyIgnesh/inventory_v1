@@ -71,11 +71,23 @@ class SummaryScreen extends StatelessWidget {
                   horizontal: 15.0,
                   vertical: 8.0,
                 ),
-                child: Text(
-                  productsChosenForSale.length > 1
-                      ? '${productsChosenForSale.length} products sold at price $totalPrice'
-                      : '${productsChosenForSale.length} product sold at price $totalPrice',
-                  style: TextStyle(fontSize: 18),
+                child: Row(
+                  children: [
+                    Text(
+                      productsChosenForSale.length > 1
+                          ? '${productsChosenForSale.length} products sold at price '
+                          : '${productsChosenForSale.length} product sold at price ',
+                      style: TextStyle(fontSize: 18),
+                    ),
+                    Icon(
+                      FontAwesomeIcons.rupeeSign,
+                      size: 14,
+                    ),
+                    Text(
+                      '$totalPrice',
+                      style: TextStyle(fontSize: 18),
+                    ),
+                  ],
                 ),
               ),
               Expanded(

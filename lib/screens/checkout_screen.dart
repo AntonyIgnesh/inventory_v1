@@ -119,11 +119,25 @@ class CheckoutScreen extends StatelessWidget {
                       fontSize: 18,
                     ),
                   ),
-                  Text(
-                    'Total Price : $totalPrice',
-                    style: TextStyle(
-                      fontSize: 18,
-                    ),
+                  Row(
+                    children: [
+                      Text(
+                        'Total Price : ',
+                        style: TextStyle(
+                          fontSize: 18,
+                        ),
+                      ),
+                      Icon(
+                        FontAwesomeIcons.rupeeSign,
+                        size: 14,
+                      ),
+                      Text(
+                        '$totalPrice',
+                        style: TextStyle(
+                          fontSize: 18,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
