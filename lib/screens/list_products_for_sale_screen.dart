@@ -7,6 +7,8 @@ import 'landing_screen.dart';
 List<Map<String, dynamic>> finalList = [];
 List<String> productsChosenWhileListing = [];
 List<String> productRatesChosenWhileListing = [];
+List<String> productDescriptionsChosenWhileListing = [];
+List<String> productSizesChosenWhileListing = [];
 
 class ListProductsForSaleScreen extends StatefulWidget {
   final String id = '/listProductsForSaleScreen';
@@ -44,6 +46,7 @@ class _ListProductsForSaleScreenState extends State<ListProductsForSaleScreen> {
             {
               'ProductID': productsListFromFireStore[index]['ProductID'],
               'ProductDesc': productsListFromFireStore[index]['ProductDesc'],
+              'Size': productsListFromFireStore[index]['Size'],
               'Rate': productsListFromFireStore[index]['Rate'],
               'CardColor': kCardColor,
               'showCheckIcon': false,
@@ -57,6 +60,7 @@ class _ListProductsForSaleScreenState extends State<ListProductsForSaleScreen> {
           {
             'ProductID': productsListFromFireStore[index]['ProductID'],
             'ProductDesc': productsListFromFireStore[index]['ProductDesc'],
+            'Size': productsListFromFireStore[index]['Size'],
             'Rate': productsListFromFireStore[index]['Rate'],
             'CardColor': kCardColor,
             'showCheckIcon': false,
@@ -73,6 +77,8 @@ class _ListProductsForSaleScreenState extends State<ListProductsForSaleScreen> {
         finalList.clear();
         productsChosenWhileListing.clear();
         productRatesChosenWhileListing.clear();
+        productDescriptionsChosenWhileListing.clear();
+        productSizesChosenWhileListing.clear();
         return true;
       },
       child: SafeArea(
@@ -112,6 +118,10 @@ class _ListProductsForSaleScreenState extends State<ListProductsForSaleScreen> {
                                   .add(finalList[index]['ProductID']);
                               productRatesChosenWhileListing
                                   .add(finalList[index]['Rate']);
+                              productDescriptionsChosenWhileListing
+                                  .add(finalList[index]['ProductDesc']);
+                              productSizesChosenWhileListing
+                                  .add(finalList[index]['Size']);
                             } else if (finalList[index]['CardColor'] ==
                                 Colors.deepOrangeAccent) {
                               finalList[index]['CardColor'] = kCardColor;
@@ -120,6 +130,10 @@ class _ListProductsForSaleScreenState extends State<ListProductsForSaleScreen> {
                                   .remove(finalList[index]['ProductID']);
                               productRatesChosenWhileListing
                                   .remove(finalList[index]['Rate']);
+                              productDescriptionsChosenWhileListing
+                                  .remove(finalList[index]['ProductDesc']);
+                              productSizesChosenWhileListing
+                                  .remove(finalList[index]['Size']);
                             }
                           });
                         },
@@ -181,21 +195,42 @@ class _ListProductsForSaleScreenState extends State<ListProductsForSaleScreen> {
                                     ),
                                   ],
                                 ),
-                                Row(
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
-                                    Icon(
-                                      FontAwesomeIcons.rupeeSign,
-                                      size: 14,
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 2.0),
+                                      child: Row(
+                                        children: [
+                                          Icon(
+                                            FontAwesomeIcons.rupeeSign,
+                                            size: 14,
+                                          ),
+                                          Text(
+                                            finalList[index]['Rate'].toString(),
+                                            style: TextStyle(
+                                              fontSize: finalList[index]['Rate']
+                                                          .toString()
+                                                          .length <
+                                                      4
+                                                  ? 18
+                                                  : 13,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                    Text(
-                                      finalList[index]['Rate'].toString(),
-                                      style: TextStyle(
-                                        fontSize: finalList[index]['Rate']
-                                                    .toString()
-                                                    .length <
-                                                4
-                                            ? 18
-                                            : 13,
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 4.0),
+                                      child: Text(
+                                        finalList[index]['Size'].toString(),
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          color: Colors.yellowAccent,
+                                        ),
                                       ),
                                     ),
                                   ],
@@ -218,9 +253,18 @@ class _ListProductsForSaleScreenState extends State<ListProductsForSaleScreen> {
                     for (String rates in productRatesChosenWhileListing) {
                       productRatesChosenForSale.add(rates);
                     }
-                    Navigator.pop(context);
+                    for (String description
+                        in productDescriptionsChosenWhileListing) {
+                      productDescriptionsChosenForSale.add(description);
+                    }
+                    for (String sizes in productSizesChosenWhileListing) {
+                      productSizesChosenForSale.add(sizes);
+                    }
                     productsChosenWhileListing.clear();
                     productRatesChosenWhileListing.clear();
+                    productDescriptionsChosenWhileListing.clear();
+                    productSizesChosenWhileListing.clear();
+                    Navigator.pop(context);
                   },
                   child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 15),

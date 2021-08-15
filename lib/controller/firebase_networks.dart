@@ -75,7 +75,7 @@ Future generateSalesDocumentID() async {
       newSalesDocumentId = lastAddedSalesDocumentId + 1;
 
       finalSalesDocumentId =
-          'Product${newSalesDocumentId.toString().padLeft(10, '0')}';
+          'Sales${newSalesDocumentId.toString().padLeft(10, '0')}';
     } else {
       finalSalesDocumentId = 'Sales0000000001';
     }
@@ -115,6 +115,35 @@ Future generateBillNumber() async {
       finalNewBillNumber = 'LMNS0000000001';
     }
     print(finalNewBillNumber);
+  }
+}
+
+Future addSoldProductsRecord(String products, String productRates,
+    String productDescriptions, String productSizes, String totalPrice) async {
+  DateTime dateUnformatted = DateTime.now();
+  DateFormat dateFormatted = DateFormat('dd MMM yy');
+  String fullDateNeeded = dateFormatted.format(dateUnformatted);
+
+  var splitDate = fullDateNeeded.split(' ');
+  todayDate = splitDate[0];
+  todayMonth = splitDate[1];
+  todayYear = splitDate[2];
+
+  if (products.isNotEmpty && productRates.isNotEmpty) {
+    await _fireStore.collection('sales').doc(finalSalesDocumentId).set(
+      {
+        'BillNumber': finalNewBillNumber,
+        'SoldProducts': products,
+        'SoldProductRates': productRates,
+        'SoldProductDescription': productDescriptions,
+        'SoldProductSizes': productSizes,
+        'TotalPrice': totalPrice,
+        'SoldDate': todayDate,
+        'SoldMonth': todayMonth,
+        'SoldYear': todayYear,
+        'Timestamp': dateUnformatted,
+      },
+    );
   }
 }
 
@@ -180,6 +209,7 @@ Future generateProductListForSale() async {
             {
               'ProductID': receivedRecords.get('ProductId'),
               'ProductDesc': receivedRecords.get('ProductDescription'),
+              'Size': receivedRecords.get('Size'),
               'Rate': receivedRecords.get('Rate'),
             },
           );

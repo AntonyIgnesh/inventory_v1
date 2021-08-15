@@ -320,6 +320,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                 builder: (context) => SalesScreen(
                                   productId: widget.productId,
                                   productDesc: widget.productDesc,
+                                  size: widget.size,
                                   rate: widget.rate,
                                 ),
                               );

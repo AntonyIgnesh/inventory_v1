@@ -235,6 +235,7 @@ class _ViewProductsScreenState extends State<ViewProductsScreen> {
                                   builder: (context) => SalesScreen(
                                     productId: productId,
                                     productDesc: productDesc,
+                                    size: size,
                                     rate: rate,
                                   ),
                                 );
