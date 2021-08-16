@@ -42,15 +42,35 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       allSoldProductSizes =
           allSoldProductSizes + regexForSoldProducts + soldProdSize;
     }
+    allSoldProductIds =
+        allSoldProductIds.substring(regexForSoldProducts.length);
+    allSoldProductDescription =
+        allSoldProductDescription.substring(regexForSoldProducts.length);
+    allSoldProductRates =
+        allSoldProductRates.substring(regexForSoldProducts.length);
+    allSoldProductSizes =
+        allSoldProductSizes.substring(regexForSoldProducts.length);
     try {
       await addSoldProductsRecord(
-          allSoldProductIds,
-          allSoldProductRates,
-          allSoldProductDescription,
-          allSoldProductSizes,
-          widget.totalPrice.toString());
+        allSoldProductIds,
+        allSoldProductRates,
+        allSoldProductDescription,
+        allSoldProductSizes,
+        widget.totalPrice.toString(),
+        productsChosenForSale.length.toString(),
+      );
     } catch (e) {
       print('Error in adding bill to Fire');
+    }
+  }
+
+  Future deleteSoldProductsFromFirestore(List<String> products) async {
+    try {
+      for (String eachProds in products) {
+        await deleteProductFromFireStoreWithProductId(eachProds.trim());
+      }
+    } catch (e) {
+      print('Error in deletion');
     }
   }
 
@@ -212,6 +232,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   onPressed: () async {
                     setState(() => showLoading = true);
                     await addSoldProductsToFireBase();
+                    await deleteSoldProductsFromFirestore(
+                        productsChosenForSale);
                     setState(() => showLoading = false);
                     Route route = MaterialPageRoute(
                       builder: (context) => SummaryScreen(

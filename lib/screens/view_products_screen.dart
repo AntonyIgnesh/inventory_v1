@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:inventory_v1/constants.dart';
+import 'package:inventory_v1/screens/landing_screen.dart';
+import 'package:inventory_v1/screens/list_products_for_sale_screen.dart';
 import 'package:inventory_v1/screens/sales_screen.dart';
 import 'package:inventory_v1/widgets/products_card.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -231,6 +233,11 @@ class _ViewProductsScreenState extends State<ViewProductsScreen> {
                               {
                                 await generateSalesDocumentID();
                                 await generateBillNumber();
+                                finalList.clear();
+                                productsChosenForSale.clear();
+                                productDescriptionsChosenForSale.clear();
+                                productRatesChosenForSale.clear();
+                                productSizesChosenForSale.clear();
                                 Route route = MaterialPageRoute(
                                   builder: (context) => SalesScreen(
                                     productId: productId,

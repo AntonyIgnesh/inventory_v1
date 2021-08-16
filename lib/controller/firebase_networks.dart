@@ -118,8 +118,13 @@ Future generateBillNumber() async {
   }
 }
 
-Future addSoldProductsRecord(String products, String productRates,
-    String productDescriptions, String productSizes, String totalPrice) async {
+Future addSoldProductsRecord(
+    String products,
+    String productRates,
+    String productDescriptions,
+    String productSizes,
+    String totalPrice,
+    String quantity) async {
   DateTime dateUnformatted = DateTime.now();
   DateFormat dateFormatted = DateFormat('dd MMM yy');
   String fullDateNeeded = dateFormatted.format(dateUnformatted);
@@ -137,6 +142,7 @@ Future addSoldProductsRecord(String products, String productRates,
         'SoldProductRates': productRates,
         'SoldProductDescription': productDescriptions,
         'SoldProductSizes': productSizes,
+        'NoOfProductsSold': quantity,
         'TotalPrice': totalPrice,
         'SoldDate': todayDate,
         'SoldMonth': todayMonth,

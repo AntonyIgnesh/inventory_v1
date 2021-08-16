@@ -177,6 +177,8 @@ class SummaryScreen extends StatelessWidget {
                   onPressed: () {
                     productsChosenForSale.clear();
                     productRatesChosenForSale.clear();
+                    productDescriptionsChosenForSale.clear();
+                    productSizesChosenForSale.clear();
                     Navigator.pushReplacementNamed(context, LandingScreen().id);
                   },
                 ),

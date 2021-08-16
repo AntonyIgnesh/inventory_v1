@@ -8,6 +8,9 @@ import 'package:inventory_v1/widgets/sizes_dropdown.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:inventory_v1/widgets/toast.dart';
 
+import 'landing_screen.dart';
+import 'list_products_for_sale_screen.dart';
+
 class ProductDetailsScreen extends StatefulWidget {
   bool showLoading = false;
   bool deleteValue = false;
@@ -315,6 +318,11 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                               setState(() => widget.showLoading = true);
                               await generateSalesDocumentID();
                               await generateBillNumber();
+                              finalList.clear();
+                              productsChosenForSale.clear();
+                              productDescriptionsChosenForSale.clear();
+                              productRatesChosenForSale.clear();
+                              productSizesChosenForSale.clear();
                               setState(() => widget.showLoading = false);
                               Route route = MaterialPageRoute(
                                 builder: (context) => SalesScreen(
