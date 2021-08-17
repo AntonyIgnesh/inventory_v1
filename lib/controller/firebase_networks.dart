@@ -235,7 +235,7 @@ Future generateProductID() async {
 
     await getSoldOutProductsFromFireBase();
 
-    if (allSoldProductsList.contains(finalNewProductId)) {
+    while (allSoldProductsList.contains(finalNewProductId)) {
       String lastDigitsOfNewProdId = finalNewProductId.substring(6);
       int lastDigitsOfNewProdIdInt = int.parse(lastDigitsOfNewProdId) + 1;
       finalNewProductId = finalNewProductId.substring(0, 6) +
