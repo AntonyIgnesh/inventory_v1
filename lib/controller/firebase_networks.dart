@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
+import 'package:inventory_v1/screens/landing_screen.dart';
 import 'package:inventory_v1/widgets/toast.dart';
 
 final _fireStore = FirebaseFirestore.instance;
@@ -14,6 +15,7 @@ String todayDate;
 String todayMonth;
 String todayYear;
 List<Map<String, dynamic>> allProductsList = [];
+List<String> allSoldProductsList = [];
 var sizeFromFireStore;
 
 Future getSizesFromFireBase() async {
@@ -153,6 +155,39 @@ Future addSoldProductsRecord(
   }
 }
 
+Future getSoldOutProductsFromFireBase() async {
+  List<String> soldProductsList = [];
+  List<String> noOfProductsSold = [];
+  List<String> interimList = [];
+  var documentsFromFireStore = await _fireStore.collection("sales").get();
+
+  if (documentsFromFireStore != null) {
+    List<DocumentSnapshot> documentList = documentsFromFireStore.docs;
+
+    if (documentList.isNotEmpty) {
+      documentList.forEach(
+        (receivedRecords) {
+          noOfProductsSold.add(receivedRecords.get('NoOfProductsSold'));
+          soldProductsList.add(receivedRecords.get('SoldProducts'));
+        },
+      );
+    }
+
+    for (int i = 0; i < noOfProductsSold.length; i++) {
+      if (int.parse(noOfProductsSold[i]) == 1) {
+        allSoldProductsList.add(soldProductsList[i]);
+      } else {
+        interimList.clear();
+        interimList = soldProductsList[i].split(regexForSoldProducts);
+        for (String prods in interimList) {
+          allSoldProductsList.add(prods);
+        }
+        interimList.clear();
+      }
+    }
+  }
+}
+
 Future generateProductID() async {
   List<String> productIdFromFireStore = [];
   DateTime dateUnformatted = DateTime.now();
@@ -197,6 +232,16 @@ Future generateProductID() async {
     } else {
       finalNewProductId = todayMonth.toUpperCase() + todayYear + '-00001';
     }
+
+    await getSoldOutProductsFromFireBase();
+
+    if (allSoldProductsList.contains(finalNewProductId)) {
+      String lastDigitsOfNewProdId = finalNewProductId.substring(6);
+      int lastDigitsOfNewProdIdInt = int.parse(lastDigitsOfNewProdId) + 1;
+      finalNewProductId = finalNewProductId.substring(0, 6) +
+          lastDigitsOfNewProdIdInt.toString().padLeft(5, '0');
+    }
+    allSoldProductsList.clear();
     print(finalNewProductId);
   }
 }
