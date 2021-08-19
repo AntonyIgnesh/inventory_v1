@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:inventory_v1/widgets/landing_page_report_widget.dart';
 import 'package:inventory_v1/widgets/reusable_card.dart';
 import 'package:inventory_v1/constants.dart';
 import 'total_asset_screen.dart';
@@ -160,7 +161,7 @@ class _LandingScreenState extends State<LandingScreen> {
                       Expanded(
                         child: ReuseableCard(
                           colour: kCardColor,
-                          cardChild: TotalAssetScreen(),
+                          cardChild: LandingPageReportWidget(),
                         ),
                       ),
                     ],

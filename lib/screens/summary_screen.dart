@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../constants.dart';
 import 'landing_screen.dart';
+import 'package:share_plus/share_plus.dart';
 
 class SummaryScreen extends StatelessWidget {
   final billNumber;
@@ -14,6 +15,8 @@ class SummaryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String shareBillText =
+        'LMNS Shop\nBill No: $billNumber\n${productsChosenForSale.length} products sold at $totalPrice';
     return WillPopScope(
       onWillPop: () async => false,
       child: SafeArea(
@@ -22,6 +25,16 @@ class SummaryScreen extends StatelessWidget {
             automaticallyImplyLeading: false,
             title: Text('Summary'),
             centerTitle: true,
+            actions: [
+              IconButton(
+                onPressed: () {
+                  Share.share(shareBillText);
+                },
+                icon: Icon(
+                  Icons.share,
+                ),
+              ),
+            ],
           ),
           body: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,

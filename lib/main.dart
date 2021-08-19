@@ -6,6 +6,7 @@ import 'screens/add_products_screen.dart';
 import 'screens/sales_screen.dart';
 import 'screens/splash_screen.dart';
 import 'screens/list_products_for_sale_screen.dart';
+import 'screens/report_screen.dart';
 
 void main() => runApp(MyApp());
 
@@ -37,6 +38,7 @@ class _MyAppState extends State<MyApp> {
         AddProductsScreen().id: (context) => AddProductsScreen(),
         ListProductsForSaleScreen().id: (context) =>
             ListProductsForSaleScreen(),
+        ReportScreen().id: (context) => ReportScreen(),
       },
     );
   }
